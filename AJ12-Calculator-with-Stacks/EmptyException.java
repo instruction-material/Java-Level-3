@@ -1,2 +1,1 @@
-public class EmptyException extends RuntimeException {
-}
+public class EmptyException extends RuntimeException {}

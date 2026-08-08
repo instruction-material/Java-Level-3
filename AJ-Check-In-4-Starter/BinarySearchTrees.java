@@ -1,11 +1,11 @@
 class BinarySearchTrees {
-  public static void main(String[] args) {
-    
-    ////////////////////////////////
-    //// BINARY SEARCH TREES
-    ////////////////////////////////
+    public static void main(String[] args) {
 
-    /*
+        ////////////////////////////////
+        //// BINARY SEARCH TREES
+        ////////////////////////////////
+
+        /*
 
     BST-2: Define the following terms:
     -Node
@@ -21,5 +21,5 @@ class BinarySearchTrees {
     -Subtree
 
     */
-  }
+    }
 }

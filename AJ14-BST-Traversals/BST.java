@@ -1,159 +1,159 @@
-public class BST implements BSTInterface{
-  
-  //INSTANCE VARIABLES
-  private Node root;
-  private int size;
+public class BST implements BSTInterface {
 
-  //NODE INNER CLASS ------------------------------------------------
-  private class Node {
-    
-    int value;
-    Node left = null;
-    Node right = null;
+    //INSTANCE VARIABLES
+    private Node root;
+    private int size;
 
-    public Node(int value) {
-      this.value = value;
-    }
-  }
+    //NODE INNER CLASS ------------------------------------------------
+    private class Node {
 
-  //METHODS ---------------------------------------------------------
-  @Override
-  public int size() {
-    return this.size;
-  }
-  @Override
-  public boolean isEmpty() {
-    return root == null;
-  }
+        int value;
+        Node left = null;
+        Node right = null;
 
-  //INSERT METHODS --------------------------------------------------
-  @Override
-  public void insert(int value){
-    this.root = add(this.root, value);
-    size++;
-  }
-  private Node add(Node node, int value){
-
-    //base case
-    if(node == null){
-      //add a new node
-      return new Node(value);
-    }
-    if(node.value == value){
-      //error: insertion value is already in tree
-      throw new IllegalArgumentException(value + "already exists in the tree. No duplicates are allowed.");
+        public Node(int value) {
+            this.value = value;
+        }
     }
 
-    //recursive case
-    if(value < node.value){
-      node.left = add(node.left, value);
-    }else{
-      node.right = add(node.right, value);
+    //METHODS ---------------------------------------------------------
+    @Override
+    public int size() {
+        return this.size;
     }
-    return node;
-  }
-
-  //FIND METHODS ----------------------------------------------------
-  @Override
-  public boolean has(int value) {
-    return find(this.root, value) != null;
-  }
-  private Node find(Node node, int value) {
-
-    //base case
-    if(node == null){
-      return null;
-    }
-    if(node.value == value){
-      return node;
+    @Override
+    public boolean isEmpty() {
+        return root == null;
     }
 
-    //recursive case
-    if(value < node.value){
-      return find(node.left, value);
-    }else{
-      return find(node.right, value);
+    //INSERT METHODS --------------------------------------------------
+    @Override
+    public void insert(int value) {
+        this.root = add(this.root, value);
+        size++;
+    }
+    private Node add(Node node, int value) {
+
+        //base case
+        if (node == null) {
+            //add a new node
+            return new Node(value);
+        }
+        if (node.value == value) {
+            //error: insertion value is already in tree
+            throw new IllegalArgumentException(
+                value +
+                "already exists in the tree. No duplicates are allowed.");
+        }
+
+        //recursive case
+        if (value < node.value) {
+            node.left = add(node.left, value);
+        } else {
+            node.right = add(node.right, value);
+        }
+        return node;
     }
 
-  }
+    //FIND METHODS ----------------------------------------------------
+    @Override
+    public boolean has(int value) {
+        return find(this.root, value) != null;
+    }
+    private Node find(Node node, int value) {
 
-  //CLEAR METHODS ---------------------------------------------------
-  @Override
-  public void clear(){
-    //TODO
-  }
+        //base case
+        if (node == null) {
+            return null;
+        }
+        if (node.value == value) {
+            return node;
+        }
 
-  //REMOVE METHODS --------------------------------------------------
-  @Override
-  public void remove(int value){
-    //TODO
-  }
-  //TOSTRING METHODS ------------------------------------------------
-
-  @Override
-  public String toString(){
-    return inOrder(this.root);
-  }
-  public String inOrder(){
-    return inOrder(this.root);
-  }
-  private String inOrder(Node node){
-
-    String string = "";
-
-    //base case
-    if(node == null){
-      return string;
+        //recursive case
+        if (value < node.value) {
+            return find(node.left, value);
+        } else {
+            return find(node.right, value);
+        }
     }
 
-    //add the left subtree values
-    string += inOrder(node.left);
-    //add in the MIDDLE of children
-    string += node.value + " ";
-    //add the right subtree values
-    string += inOrder(node.right);
-
-    return string;
-  }
-  public String preOrder(){
-    return preOrder(this.root);
-  }
-  private String preOrder(Node node){
-    String string = "";
-
-    //base case
-    if(node == null){
-      return string;
+    //CLEAR METHODS ---------------------------------------------------
+    @Override
+    public void clear() {
+        //TODO
     }
 
-    //add BEFORE children
-    string += node.value + " ";
-    //add the left subtree values
-    string += preOrder(node.left);
-    //add the right subtree values
-    string += preOrder(node.right);
-
-    return string;
-  }
-  public String postOrder(){
-    return postOrder(this.root);
-  }
-  public String postOrder(Node node){
-    String string = "";
-
-    //base case
-    if(node == null){
-      return string;
+    //REMOVE METHODS --------------------------------------------------
+    @Override
+    public void remove(int value) {
+        //TODO
     }
+    //TOSTRING METHODS ------------------------------------------------
 
-    //add the left subtree values
-    string += postOrder(node.left);
-    //add the right subtree values
-    string += postOrder(node.right);
-    //add AFTER children
-    string += node.value + " " ;
+    @Override
+    public String toString() {
+        return inOrder(this.root);
+    }
+    public String inOrder() {
+        return inOrder(this.root);
+    }
+    private String inOrder(Node node) {
 
-    return string;
-  }
+        String string = "";
 
+        //base case
+        if (node == null) {
+            return string;
+        }
+
+        //add the left subtree values
+        string += inOrder(node.left);
+        //add in the MIDDLE of children
+        string += node.value + " ";
+        //add the right subtree values
+        string += inOrder(node.right);
+
+        return string;
+    }
+    public String preOrder() {
+        return preOrder(this.root);
+    }
+    private String preOrder(Node node) {
+        String string = "";
+
+        //base case
+        if (node == null) {
+            return string;
+        }
+
+        //add BEFORE children
+        string += node.value + " ";
+        //add the left subtree values
+        string += preOrder(node.left);
+        //add the right subtree values
+        string += preOrder(node.right);
+
+        return string;
+    }
+    public String postOrder() {
+        return postOrder(this.root);
+    }
+    public String postOrder(Node node) {
+        String string = "";
+
+        //base case
+        if (node == null) {
+            return string;
+        }
+
+        //add the left subtree values
+        string += postOrder(node.left);
+        //add the right subtree values
+        string += postOrder(node.right);
+        //add AFTER children
+        string += node.value + " ";
+
+        return string;
+    }
 }

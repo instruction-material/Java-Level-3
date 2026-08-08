@@ -1,91 +1,92 @@
-public class BST implements BSTInterface{
-  
-  //INSTANCE VARIABLES
-  private Node root;
-  private int size;
+public class BST implements BSTInterface {
 
-  //NODE INNER CLASS ------------------------------------------------
-  private class Node {
-    
-    int value;
-    Node left = null;
-    Node right = null;
+    //INSTANCE VARIABLES
+    private Node root;
+    private int size;
 
-    public Node(int value) {
-      this.value = value;
-    }
-  }
+    //NODE INNER CLASS ------------------------------------------------
+    private class Node {
 
-  //METHODS ---------------------------------------------------------
-  @Override
-  public int size() {
-    return this.size;
-  }
-  @Override
-  public boolean isEmpty() {
-    return root == null;
-  }
+        int value;
+        Node left = null;
+        Node right = null;
 
-  //INSERT METHODS --------------------------------------------------
-  @Override
-  public void insert(int value){
-    this.root = add(this.root, value);
-    size++;
-  }
-  private Node add(Node node, int value){
-
-    //base case
-    if(node == null){
-      //add a new node
-      return new Node(value);
-    }
-    if(node.value == value){
-      //error: insertion value is already in tree
-      throw new IllegalArgumentException(value + "already exists in the tree. No duplicates are allowed.");
+        public Node(int value) {
+            this.value = value;
+        }
     }
 
-    //recursive case
-    if(value < node.value){
-      node.left = add(node.left, value);
-    }else{
-      node.right = add(node.right, value);
+    //METHODS ---------------------------------------------------------
+    @Override
+    public int size() {
+        return this.size;
     }
-    return node;
-  }
-
-  //FIND METHODS ----------------------------------------------------
-  @Override
-  public boolean has(int value) {
-    return find(this.root, value) != null;
-  }
-  private Node find(Node node, int value) {
-
-    //base case
-    if(node == null){
-      return null;
-    }
-    if(node.value == value){
-      return node;
+    @Override
+    public boolean isEmpty() {
+        return root == null;
     }
 
-    //recursive case
-    if(value < node.value){
-      return find(node.left, value);
-    }else{
-      return find(node.right, value);
+    //INSERT METHODS --------------------------------------------------
+    @Override
+    public void insert(int value) {
+        this.root = add(this.root, value);
+        size++;
+    }
+    private Node add(Node node, int value) {
+
+        //base case
+        if (node == null) {
+            //add a new node
+            return new Node(value);
+        }
+        if (node.value == value) {
+            //error: insertion value is already in tree
+            throw new IllegalArgumentException(
+                value +
+                "already exists in the tree. No duplicates are allowed.");
+        }
+
+        //recursive case
+        if (value < node.value) {
+            node.left = add(node.left, value);
+        } else {
+            node.right = add(node.right, value);
+        }
+        return node;
     }
 
-  }
+    //FIND METHODS ----------------------------------------------------
+    @Override
+    public boolean has(int value) {
+        return find(this.root, value) != null;
+    }
+    private Node find(Node node, int value) {
 
-  //CLEAR METHODS ---------------------------------------------------
-  @Override
-  public void clear(){
-    //TODO
-  }
+        //base case
+        if (node == null) {
+            return null;
+        }
+        if (node.value == value) {
+            return node;
+        }
 
-  //REMOVE METHODS --------------------------------------------------
-  @Override
-  public void remove(int value){
-    //TODO
-  }
+        //recursive case
+        if (value < node.value) {
+            return find(node.left, value);
+        } else {
+            return find(node.right, value);
+        }
+    }
+
+    //CLEAR METHODS ---------------------------------------------------
+    @Override
+    public void clear() {
+        //TODO
+    }
+
+    //REMOVE METHODS --------------------------------------------------
+    @Override
+    public void remove(int value) {
+        //TODO
+    }
 }

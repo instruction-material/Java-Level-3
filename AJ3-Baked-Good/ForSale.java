@@ -1,3 +1,3 @@
 public interface ForSale {
-  public boolean getForSale();
+    public boolean getForSale();
 }

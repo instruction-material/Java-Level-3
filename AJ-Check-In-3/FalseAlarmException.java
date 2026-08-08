@@ -1,1 +1,1 @@
-public class FalseAlarmException extends Exception{}
+public class FalseAlarmException extends Exception {}

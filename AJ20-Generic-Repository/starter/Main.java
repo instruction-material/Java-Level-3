@@ -10,7 +10,8 @@ interface Identified {
     String id();
 }
 
-record CourseRecord(String id, String title, int moduleCount, boolean active) implements Identified {
+record CourseRecord(String id, String title, int moduleCount, boolean active)
+    implements Identified {
     public CourseRecord {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("id is required");
@@ -19,7 +20,8 @@ record CourseRecord(String id, String title, int moduleCount, boolean active) im
             throw new IllegalArgumentException("title is required");
         }
         if (moduleCount < 0) {
-            throw new IllegalArgumentException("module count cannot be negative");
+            throw new IllegalArgumentException(
+                "module count cannot be negative");
         }
     }
 
@@ -28,7 +30,8 @@ record CourseRecord(String id, String title, int moduleCount, boolean active) im
     }
 }
 
-record StudentRecord(String id, String name, int completedModules) implements Identified {
+record StudentRecord(String id, String name, int completedModules)
+    implements Identified {
     public StudentRecord {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("id is required");
@@ -37,7 +40,8 @@ record StudentRecord(String id, String name, int completedModules) implements Id
             throw new IllegalArgumentException("name is required");
         }
         if (completedModules < 0) {
-            throw new IllegalArgumentException("completed modules cannot be negative");
+            throw new IllegalArgumentException(
+                "completed modules cannot be negative");
         }
     }
 }
@@ -79,7 +83,8 @@ public class Main {
         Repository<CourseRecord> courses = new Repository<>();
         courses.add(new CourseRecord("java-3", "Java Level 3", 22, true));
         courses.add(new CourseRecord("cpp-3", "C++ Level 3", 8, true));
-        courses.add(new CourseRecord("legacy-java", "Legacy Java Review", 4, false));
+        courses.add(
+            new CourseRecord("legacy-java", "Legacy Java Review", 4, false));
 
         Repository<StudentRecord> students = new Repository<>();
         students.add(new StudentRecord("s-100", "Ada", 18));

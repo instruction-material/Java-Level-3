@@ -1,11 +1,11 @@
 class Main {
-  public static void main(String[] args) {
+    public static void main(String[] args) {
 
-    ////////////////////////////////
-    //// BINARY SEARCH TREES
-    ////////////////////////////////
+        ////////////////////////////////
+        //// BINARY SEARCH TREES
+        ////////////////////////////////
 
-    /*
+        /*
 
     BST-2: Define the following terms:
     -Node: Stores data
@@ -29,24 +29,24 @@ class Main {
 
     */
 
-    ////////////////////////////////
-    //// HASHTABLES
-    ////////////////////////////////
+        ////////////////////////////////
+        //// HASHTABLES
+        ////////////////////////////////
 
-    /*
+        /*
     HashTables-3: What is a load factor? Calculate the load factors for the following tables:
 
-    1543 slots, 695 nodes = 0.45 
+    1543 slots, 695 nodes = 0.45
     700,001 slots 420,000 nodes = 0.59 Rehash
     193 slots, 98 nodes = 0.507 Rehash
 
     */
 
-    ////////////////////////////////
-    //// GRAPHS
-    ////////////////////////////////
+        ////////////////////////////////
+        //// GRAPHS
+        ////////////////////////////////
 
-    /* 
+        /*
     Graph-2: Define the following terms:
     -Vertex: Node in a graph
     -Edge: Connects vertices
@@ -59,8 +59,8 @@ class Main {
     -Weighted: Weights on the edges
     */
 
-    //Graph-3: Create an adjacency list from the given graph.
-    /*
+        //Graph-3: Create an adjacency list from the given graph.
+        /*
     0: 3
     1: 2, 5
     2: 6
@@ -71,20 +71,19 @@ class Main {
     7: 4
     */
 
-    //Graph-4: Create an adjacency matrix from the given graph.
-    int[][] matrix = new int[][] {/*
-            A  B  C  D  E   
-    /*A*/ { 0, 1, 1, 1, 3}, 
-    /*B*/ { 1, 0, 5, 7, 0}, 
-    /*C*/ { 1, 5, 0, 0, 0}, 
-    /*D*/ { 1, 7, 0, 0, 0}, 
-    /*E*/ { 3, 0, 0, 0, 0}}; 
-  }
+        //Graph-4: Create an adjacency matrix from the given graph.
+        int[][] matrix = new int[][] {/*
+            A  B  C  D  E
+    /*A*/
+                                      {0, 1, 1, 1, 3},
+                                      /*B*/ {1, 0, 5, 7, 0},
+                                      /*C*/ {1, 5, 0, 0, 0},
+                                      /*D*/ {1, 7, 0, 0, 0},
+                                      /*E*/ {3, 0, 0, 0, 0}};
+    }
 
-  }
-
-  private int hash(Object key, int tableSize) {
-    return key.hashCode() % tableSize;
-  }
-
+    // Compute the table index for the provided key
+    private int hash(Object key, int tableSize) {
+        return key.hashCode() % tableSize;
+    }
 }

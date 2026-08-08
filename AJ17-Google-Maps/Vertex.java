@@ -1,2 +1,1 @@
-public interface Vertex<T> extends Position<T> {
-}
+public interface Vertex<T> extends Position<T> {}

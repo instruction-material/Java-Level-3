@@ -1,7 +1,7 @@
-import java.util.*; 
+import java.util.*;
 
-class Main { 
-  public static void main(String args[]){
-    //TODO: Test your graph here!
-  }
-} 
+class Main {
+    public static void main(String args[]) {
+        //TODO: Test your graph here!
+    }
+}

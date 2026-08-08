@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 class Main {
-  public static void main(String[] args) {
-    //TODO: test your hashmap here!
-  }
+    public static void main(String[] args) {
+        //TODO: test your hashmap here!
+    }
 }

@@ -18,7 +18,8 @@ interface Identified {
 }
 
 // Store course metadata in an immutable record
-record CourseRecord(String id, String title, int moduleCount, boolean active) implements Identified {
+record CourseRecord(String id, String title, int moduleCount, boolean active)
+    implements Identified {
     private static final int MINIMUM_MODULE_COUNT = 0;
     private static final int LARGE_COURSE_MODULE_THRESHOLD = 10;
 
@@ -35,7 +36,8 @@ record CourseRecord(String id, String title, int moduleCount, boolean active) im
 
         // Reject impossible negative module counts
         if (moduleCount < MINIMUM_MODULE_COUNT) {
-            throw new IllegalArgumentException("module count cannot be negative");
+            throw new IllegalArgumentException(
+                "module count cannot be negative");
         }
     }
 
@@ -50,7 +52,8 @@ record CourseRecord(String id, String title, int moduleCount, boolean active) im
 }
 
 // Store student progress in an immutable record
-record StudentRecord(String id, String name, int completedModules) implements Identified {
+record StudentRecord(String id, String name, int completedModules)
+    implements Identified {
     private static final int MINIMUM_COMPLETED_MODULES = 0;
 
     public StudentRecord {
@@ -66,7 +69,8 @@ record StudentRecord(String id, String name, int completedModules) implements Id
 
         // Reject impossible negative progress counts
         if (completedModules < MINIMUM_COMPLETED_MODULES) {
-            throw new IllegalArgumentException("completed modules cannot be negative");
+            throw new IllegalArgumentException(
+                "completed modules cannot be negative");
         }
     }
 }
@@ -183,9 +187,12 @@ public class Main {
     // Build the sample course repository used by the demo
     private static Repository<CourseRecord> buildCourseRepository() {
         Repository<CourseRecord> courses = new Repository<>();
-        courses.add(new CourseRecord(JAVA_LEVEL_3_ID, "Java Level 3", JAVA_LEVEL_3_MODULE_COUNT, true));
-        courses.add(new CourseRecord(CPP_LEVEL_3_ID, "C++ Level 3", CPP_LEVEL_3_MODULE_COUNT, true));
-        courses.add(new CourseRecord(LEGACY_JAVA_ID, "Legacy Java Review", LEGACY_JAVA_MODULE_COUNT, false));
+        courses.add(new CourseRecord(JAVA_LEVEL_3_ID, "Java Level 3",
+                                     JAVA_LEVEL_3_MODULE_COUNT, true));
+        courses.add(new CourseRecord(CPP_LEVEL_3_ID, "C++ Level 3",
+                                     CPP_LEVEL_3_MODULE_COUNT, true));
+        courses.add(new CourseRecord(LEGACY_JAVA_ID, "Legacy Java Review",
+                                     LEGACY_JAVA_MODULE_COUNT, false));
         return courses;
     }
 
@@ -193,7 +200,8 @@ public class Main {
     private static Repository<StudentRecord> buildStudentRepository() {
         Repository<StudentRecord> students = new Repository<>();
         students.add(new StudentRecord(ADA_ID, "Ada", ADA_COMPLETED_MODULES));
-        students.add(new StudentRecord(GRACE_ID, "Grace", GRACE_COMPLETED_MODULES));
+        students.add(
+            new StudentRecord(GRACE_ID, "Grace", GRACE_COMPLETED_MODULES));
         return students;
     }
 
@@ -202,52 +210,34 @@ public class Main {
         CourseRecord javaLevel3 = courses.get(JAVA_LEVEL_3_ID).orElseThrow();
         System.out.println(javaLevel3.title());
         System.out.println(javaLevel3);
-        System.out.println(
-            javaLevel3.equals(
-                new CourseRecord(
-                    JAVA_LEVEL_3_ID,
-                    "Java Level 3",
-                    JAVA_LEVEL_3_MODULE_COUNT,
-                    true
-                )
-            )
-        );
+        System.out.println(javaLevel3.equals(new CourseRecord(
+            JAVA_LEVEL_3_ID, "Java Level 3", JAVA_LEVEL_3_MODULE_COUNT, true)));
     }
 
     // Print query examples for courses and students
-    private static void printQueryExamples(
-        Repository<CourseRecord> courses,
-        Repository<StudentRecord> students
-    ) {
+    private static void printQueryExamples(Repository<CourseRecord> courses,
+                                           Repository<StudentRecord> students) {
         List<CourseRecord> activeLargeCourses = courses.findAll(
-            course -> course.active() && course.isLargeCourse()
-        );
+            course -> course.active() && course.isLargeCourse());
         System.out.println("Active large courses: " + activeLargeCourses);
 
         List<StudentRecord> experiencedStudents = students.findAll(
-            student -> student.completedModules() >= EXPERIENCED_MODULE_THRESHOLD
-        );
+            student
+            -> student.completedModules() >= EXPERIENCED_MODULE_THRESHOLD);
         System.out.println("Experienced students: " + experiencedStudents);
 
         List<CourseRecord> byModuleCount = courses.sorted(
-            Comparator.comparingInt(CourseRecord::moduleCount).reversed()
-        );
+            Comparator.comparingInt(CourseRecord::moduleCount).reversed());
         System.out.println("Courses by module count: " + byModuleCount);
     }
 
     // Demonstrate duplicate-id protection in the repository
-    private static void printDuplicateIdExample(Repository<CourseRecord> courses) {
+    private static void
+    printDuplicateIdExample(Repository<CourseRecord> courses) {
         try {
-            courses.add(
-                new CourseRecord(
-                    JAVA_LEVEL_3_ID,
-                    "Duplicate Java",
-                    DUPLICATE_MODULE_COUNT,
-                    true
-                )
-            );
-        }
-        catch (IllegalArgumentException exception) {
+            courses.add(new CourseRecord(JAVA_LEVEL_3_ID, "Duplicate Java",
+                                         DUPLICATE_MODULE_COUNT, true));
+        } catch (IllegalArgumentException exception) {
             System.out.println("Rejected duplicate: " + exception.getMessage());
         }
     }

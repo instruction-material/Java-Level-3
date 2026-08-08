@@ -1,14 +1,14 @@
-import java.util.*; 
-import java.lang.*; 
-import java.io.*; 
-  
-public class ShortestPathTree{ 
+import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-  int[][] graph;
-  ArrayList<Vertex<Integer>> vertices;
-  PriorityQueue<Vertex<Integer>> unvisited;
+public class ShortestPathTree {
 
-  public void dijkstra(int[][] graph, int source) {
-    //TODO...
-  }
-} 
+    int[][] graph;
+    ArrayList<Vertex<Integer>> vertices;
+    PriorityQueue<Vertex<Integer>> unvisited;
+
+    public void dijkstra(int[][] graph, int source) {
+        //TODO...
+    }
+}

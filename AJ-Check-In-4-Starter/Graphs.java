@@ -1,11 +1,11 @@
 class Graphs {
-  public static void main(String[] args) {
+    public static void main(String[] args) {
 
-    ////////////////////////////////
-    //// GRAPHS
-    ////////////////////////////////
+        ////////////////////////////////
+        //// GRAPHS
+        ////////////////////////////////
 
-    /* 
+        /*
     Graph-2: Define the following terms:
     -Vertex
     -Edge
@@ -17,5 +17,5 @@ class Graphs {
     -Degree
     -Weighted
     */
-  }
+    }
 }
