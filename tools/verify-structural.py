@@ -96,6 +96,17 @@ def verify() -> dict:
             failure = run([javac,"--release","21","-Xlint:all","-Werror","-cp","classes","ForeignClient.java"],output,success=False)
             assert marker in failure,failure
             result["compileBoundariesRejected"] += 1
+        example_source = ROOT / "DPJ5-Structural-Worked-Example"
+        example = work / "worked-example";shutil.copytree(example_source,example)
+        assert {p.name for p in example_source.iterdir()} == {"Main.java","ContractTests.java","README.md"}
+        for file in example_source.iterdir():
+            result["sourceHashes"][str(file.relative_to(ROOT))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        run([javac,"--release","21","-Xlint:all","-Werror","Main.java","ContractTests.java"],example)
+        worked = run([java,"ContractTests"],example)
+        match = re.fullmatch(r"Structural worked contracts: (\d+) passed\n",worked)
+        assert match and int(match[1]) >= 35,worked
+        assert run([java,"Main"],example) == "[Ready,*WARNING: WAIT*,GO]\nready@1\nready@2\ntrue\n"
+        result.update(workedExamplesCompiled=1,workedExampleContracts=worked.strip())
     result.update(accepted=True,temporaryBuildsCleaned=True,learnerPatternChoiceReasoningInferred=False)
     return result
 

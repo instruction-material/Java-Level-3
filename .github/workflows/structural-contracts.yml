@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - "DPJ5-Structural-Scene-Packs/**"
+      - "DPJ5-Structural-Worked-Example/**"
       - "tools/verify-structural.py"
       - "tools/verify-recursion.py"
       - ".github/workflows/structural-contracts.yml"
