@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - "DPJ2-Report-Foundations-Packs/**"
+      - "DPJ2-Seam-Worked-Example/**"
       - "tools/verify-foundations.py"
       - "tools/verify-recursion.py"
       - ".github/workflows/foundations-contracts.yml"
