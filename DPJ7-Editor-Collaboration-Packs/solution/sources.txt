@@ -1,0 +1,11 @@
+src/editor/TextDocument.java
+src/editor/EditEvent.java
+src/editor/EventBus.java
+src/editor/EditCommand.java
+src/editor/ReplaceCommand.java
+src/editor/Validation.java
+src/editor/EditorMediator.java
+src/editor/Nodes.java
+src/editor/TextVisitor.java
+Main.java
+ContractTests.java
