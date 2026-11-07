@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - "DPJ4-Legacy-Quote-Packs/**"
+      - "DPJ4-Boundary-Worked-Example/**"
       - "tools/verify-boundary.py"
       - "tools/verify-recursion.py"
       - ".github/workflows/boundary-contracts.yml"
