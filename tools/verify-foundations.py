@@ -65,8 +65,8 @@ def verify() -> dict:
             assert file.is_file()
             result["sourceHashes"][str(file.relative_to(ROOT))] = hashlib.sha256(file.read_bytes()).hexdigest()
         run([javac,"--release","21","-Xlint:all","-Werror","Main.java","ContractTests.java"], example)
-        assert run([java,"ContractTests"], example) == "Seam worked contracts: 14 passed\\n"
-        assert run([java,"Main"], example) == "Ready\\n"
+        assert run([java,"ContractTests"], example) == "Seam worked contracts: 14 passed\n"
+        assert run([java,"Main"], example) == "Ready\n"
         result["workedExamplesCompiled"] = 1
         result["workedExampleContracts"] = "Seam worked contracts: 14 passed"
         # Complete core behavior must remain usable before the optional fourth task.
