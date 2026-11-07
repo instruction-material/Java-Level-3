@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     paths:
+      - "AJ4-Call-Trace/**"
       - "AJ4-Recursion-Practice/**"
       - "AJ4-Recursion-Practice-Packs/**"
       - "AJ4-Divisible-by-7/**"

@@ -64,6 +64,14 @@ def verify() -> dict:
               "controlledRegressionsRejected": 0, "consoleCases": 0}
     with tempfile.TemporaryDirectory(prefix="java3-aj4-") as temporary:
         work = Path(temporary)
+        example = ROOT / "AJ4-Call-Trace"
+        example_output = work / "call-trace"
+        compile_pack(example, example_output, javac)
+        result["workedExamplesCompiled"] = 1
+        assert "Call-trace contracts: 105 passed" in run([java, "-cp", "classes", "ContractTests"], example_output)
+        assert run([java, "-cp", "classes", "Main"], example_output) == "10\\n"
+        for name in ["Main.java", "ContractTests.java", "README.md"]:
+            result["sourceHashes"][str((example / name).relative_to(ROOT))] = hashlib.sha256((example / name).read_bytes()).hexdigest()
         for folder, expected, reminder in packs:
             packs_root = ROOT / (folder + "-Packs")
             assert (ROOT / folder / "Main.java").read_bytes() == (packs_root / "solution/Main.java").read_bytes()
