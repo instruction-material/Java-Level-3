@@ -58,6 +58,17 @@ def verify() -> dict:
                     assert actual == expected, actual
                     result["referenceContracts"].append(actual.strip())
                 assert run([java,"-cp","classes","Main"], output) == "Weekly report\nReady\nChecked\n"
+        example_source = ROOT / "DPJ2-Seam-Worked-Example"
+        example = work / "worked-example"
+        shutil.copytree(example_source, example)
+        for file in example_source.iterdir():
+            assert file.is_file()
+            result["sourceHashes"][str(file.relative_to(ROOT))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        run([javac,"--release","21","-Xlint:all","-Werror","Main.java","ContractTests.java"], example)
+        assert run([java,"ContractTests"], example) == "Seam worked contracts: 14 passed\n"
+        assert run([java,"Main"], example) == "Ready\n"
+        result["workedExamplesCompiled"] = 1
+        result["workedExampleContracts"] = "Seam worked contracts: 14 passed"
         # Complete core behavior must remain usable before the optional fourth task.
         core = work / "core-only"
         shutil.copytree(source / "solution", core)
