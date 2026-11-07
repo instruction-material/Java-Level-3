@@ -91,6 +91,17 @@ def verify() -> dict:
             failure = contracts(output, core=core_mode, success=False)
             assert "AssertionError" in failure, failure
             result["controlledRegressionsRejected"] += 1
+        example_source = ROOT / "DPJ4-Boundary-Worked-Example"
+        example = work / "worked-example"
+        shutil.copytree(example_source, example)
+        assert {p.name for p in example_source.iterdir()} == {"Main.java", "ContractTests.java", "README.md"}
+        for file in example_source.iterdir():
+            result["sourceHashes"][str(file.relative_to(ROOT))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        run([javac, "--release", "21", "-Xlint:all", "-Werror", "Main.java", "ContractTests.java"], example)
+        worked = run([java, "ContractTests"], example)
+        assert worked == "Boundary worked contracts: 24 passed\n", worked
+        assert run([java, "Main"], example) == "1\n2\nT\nReady\nDone\n"
+        result.update(workedExamplesCompiled=1, workedExampleContracts=worked.strip())
     result.update(accepted=True, temporaryBuildsCleaned=True,
                   learnerPatternChoiceReasoningInferred=False)
     return result
