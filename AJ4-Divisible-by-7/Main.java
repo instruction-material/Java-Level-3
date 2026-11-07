@@ -1,38 +1,29 @@
-import java.util.*;
+import java.util.Scanner;
 
 class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            System.out.print("\nEnter a number: ");
-            int number = scanner.nextInt();
-
-            if (isDivBySeven(number)) {
-                System.out.println(number + " is divisible by 7");
-            } else {
-                System.out.println(number + " is NOT divisible by 7");
+        try (Scanner input = new Scanner(System.in)) {
+            while (input.hasNext()) {
+                String token = input.next();
+                if (token.equalsIgnoreCase("quit")) return;
+                try {
+                    int number = Integer.parseInt(token);
+                    System.out.println(number + (isDivBySeven(number)
+                            ? " is divisible by 7" : " is NOT divisible by 7"));
+                } catch (NumberFormatException error) {
+                    System.out.println("Invalid integer.");
+                }
             }
         }
     }
 
+    // All signed int inputs, including Integer.MIN_VALUE, are accepted.
     public static boolean isDivBySeven(int n) {
-
-        //base cases
-        if (n == 0 || n == 7) {
-            return true;
-        }
-        if (n < 10) {
-            return false;
-        }
-
-        //recursive case
-        int rightMost = n % 10;
-        int everythingElse = (int)(n / 10);
-
-        int result = everythingElse - (2 * rightMost);
-        result = Math.abs(result);
-
-        return isDivBySeven(result);
+        long magnitude = Math.abs((long) n);
+        if (magnitude < 10) return magnitude == 0 || magnitude == 7;
+        long remaining = magnitude / 10;
+        long lastDigit = magnitude % 10;
+        // This reduced value fits int and its magnitude is strictly smaller.
+        return isDivBySeven((int) (remaining - 2 * lastDigit));
     }
 }
