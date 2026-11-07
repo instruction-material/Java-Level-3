@@ -1,0 +1,26 @@
+name: DPJ7 event and undo collaboration contracts
+on:
+  push:
+    branches: [main]
+    paths:
+      - "DPJ7-Editor-Collaboration-Packs/**"
+      - "DPJ7-Collaboration-Worked-Example/**"
+      - "tools/verify-collaboration.py"
+      - "tools/verify-recursion.py"
+      - ".github/workflows/collaboration-contracts.yml"
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify clean packaged Java 21 projects and independent contracts
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 tools/verify-collaboration.py
