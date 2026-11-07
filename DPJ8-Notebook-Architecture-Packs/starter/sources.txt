@@ -1,0 +1,12 @@
+Main.java
+src/notes/application/NoteService.java
+src/notes/domain/Note.java
+src/notes/infra/BracketPlugin.java
+src/notes/infra/InMemoryNotes.java
+src/notes/infra/UppercasePlugin.java
+src/notes/plugins/PluginCatalog.java
+src/notes/plugins/TextPlugin.java
+src/notes/ports/NoteRepository.java
+src/notes/ports/NoteSink.java
+src/notes/ui/NoteViewModel.java
+ContractTests.java
