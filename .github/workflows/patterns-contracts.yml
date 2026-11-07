@@ -1,0 +1,26 @@
+name: DPJ1 design and pricing contracts
+on:
+  push:
+    branches: [main]
+    paths:
+      - "DPJ1-Pricing-Contracts/**"
+      - "DPJ1-Design-Comparison-Packs/**"
+      - "tools/verify-patterns.py"
+      - "tools/verify-recursion.py"
+      - ".github/workflows/patterns-contracts.yml"
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile role packs and verify behavior on JDK 21
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 tools/verify-patterns.py
