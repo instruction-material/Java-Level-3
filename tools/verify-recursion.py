@@ -69,7 +69,7 @@ def verify() -> dict:
         compile_pack(example, example_output, javac)
         result["workedExamplesCompiled"] = 1
         assert "Call-trace contracts: 105 passed" in run([java, "-cp", "classes", "ContractTests"], example_output)
-        assert run([java, "-cp", "classes", "Main"], example_output) == "10\\n"
+        assert run([java, "-cp", "classes", "Main"], example_output) == "10" + chr(10)
         for name in ["Main.java", "ContractTests.java", "README.md"]:
             result["sourceHashes"][str((example / name).relative_to(ROOT))] = hashlib.sha256((example / name).read_bytes()).hexdigest()
         for folder, expected, reminder in packs:
