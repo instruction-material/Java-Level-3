@@ -1,0 +1,11 @@
+Main.java
+src/report/domain/Report.java
+src/report/ports/ReportFormatter.java
+src/report/ports/ReportSink.java
+src/report/application/ReportPublisher.java
+src/report/adapters/TextFormatter.java
+src/report/adapters/UppercaseTitleFormatter.java
+src/report/adapters/ConsoleSink.java
+src/report/legacy/ReportBlob.java
+src/report/examples/LanguageChoices.java
+ContractTests.java
