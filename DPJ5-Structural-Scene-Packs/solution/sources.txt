@@ -1,0 +1,12 @@
+src/scene/Graphic.java
+src/scene/Renderer.java
+src/scene/Formats.java
+src/scene/Circle.java
+src/scene/Box.java
+src/scene/Group.java
+src/scene/Frame.java
+src/scene/LazyGraphic.java
+src/scene/GlyphPool.java
+src/scene/Placement.java
+Main.java
+ContractTests.java
