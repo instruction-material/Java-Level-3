@@ -78,7 +78,7 @@ def verify() -> dict:
             ("Document.java","document.phase = DRAFT;","document.phase = PUBLISHED;",True),
             ("ReportTemplate.java","List<String> lines = List.copyOf(input);","List<String> lines = input;",True),
             ("ReviewQueue.java","List<String> snapshot = List.copyOf(entries);","List<String> snapshot = entries;",True),
-            ("ReviewQueue.java","return index < snapshot.size();","return ++index < snapshot.size();",True),
+            ("ReviewQueue.java","return snapshot.get(index++);","return snapshot.get(index);",True),
             ("ReviewQueue.java","if (predicate.test(entry))","if (true)",False)
         ]:
             output = work / ("regression-" + str(result["controlledRegressionsRejected"]))
