@@ -1,0 +1,9 @@
+src/behavior/TextRule.java
+src/behavior/Rules.java
+src/behavior/RuleContext.java
+src/behavior/Document.java
+src/behavior/ReportTemplate.java
+src/behavior/Reports.java
+src/behavior/ReviewQueue.java
+Main.java
+ContractTests.java
