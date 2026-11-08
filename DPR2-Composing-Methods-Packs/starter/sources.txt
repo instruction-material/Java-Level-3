@@ -1,0 +1,6 @@
+ContractTests.java
+Main.java
+src/reports/ComposedReport.java
+src/reports/LegacyReport.java
+src/reports/Summary.java
+src/reports/comparison/MethodObjectReport.java

@@ -1,0 +1,41 @@
+name: Java composing methods contracts
+on:
+  push:
+    paths:
+      - "DPR2-Composing-Methods-Packs/**"
+      - "tools/verify-composing-methods.py"
+      - "tools/verify-recursion.py"
+      - ".github/workflows/composing-methods-contracts.yml"
+  pull_request:
+    paths:
+      - "DPR2-Composing-Methods-Packs/**"
+      - "tools/verify-composing-methods.py"
+      - ".github/workflows/composing-methods-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: composing-methods-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile both roles, intermediate states and controlled regressions
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 tools/verify-composing-methods.py
+      - name: Retain exact sources and native result
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-composing-methods-native-contracts
+          path: |
+            output/java-composing-methods-contracts/
+            DPR2-Composing-Methods-Packs/
+          if-no-files-found: error
+          retention-days: 14
