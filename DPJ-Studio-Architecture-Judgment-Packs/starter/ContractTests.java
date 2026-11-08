@@ -78,11 +78,11 @@ public final class ContractTests {
         checks++;
         try { failing.create("saved", "Committed"); throw new AssertionError("Missing audit failure"); }
         catch (RuntimeException failure) { if (failure != marker) throw new AssertionError("Failure identity"); }
-        same(new Note("saved", "Committed", 1), failing.find("saved").orElseThrow());
+        same(new Note("saved", "Committed", 1), failing.find("saved").orElse(null));
         checks++;
         try { failing.edit("saved", 1, "Changed"); throw new AssertionError("Missing edit audit failure"); }
         catch (RuntimeException failure) { if (failure != marker) throw new AssertionError("Failure identity"); }
-        same(new Note("saved", "Changed", 2), failing.find("saved").orElseThrow());
+        same(new Note("saved", "Changed", 2), failing.find("saved").orElse(null));
         raises(NullPointerException.class, () -> make.apply(null));
     }
     private static void optional() {

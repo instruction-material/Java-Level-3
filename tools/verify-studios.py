@@ -287,7 +287,7 @@ def verify():
             ("src/notebook/application/NotebookService.java", "previous == null || previous.version() != expectedVersion", "previous == null", "core"),
             ("src/notebook/api/Note.java", "> 80", "> 81", "core"),
             ("src/notebook/application/NotebookService.java", "repository.save(note);\n        audit.record(Action.CREATED, note);", "audit.record(Action.CREATED, note);\n        repository.save(note);", "core"),
-            ("src/notebook/memory/MemoryNotes.java", "List.copyOf(notes.values())", "new java.util.ArrayList<>(notes.values())", "core"),
+            ("src/notebook/memory/MemoryNotes.java", "notes.put(note.id(), note);", "notes.putIfAbsent(note.id(), note);", "core"),
             ("src/notebook/application/NotebookService.java", "repository.remove(id);", "// Removal deliberately omitted.", "all"),
         ]
         for index, (name, old, new, mode) in enumerate(mutations):
