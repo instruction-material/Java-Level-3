@@ -5,6 +5,8 @@ Canonical source repository: `Java-Level-3`
 ## Mapped Catalog Courses
 
 - `java-level-3`: Java Level 3
+- `design-patterns-in-java`: Design Patterns in Java
+- `design-patterns-in-java-part-2`: Design Patterns in Java Part 2: Refactoring
 
 ## Verification Gate
 
@@ -153,9 +155,13 @@ Canonical source repository: `Java-Level-3`
 | `J3-37-aj17-master-project-google-maps-supplemental-2` |
 | `J3-38-aj17-master-project-google-maps-supplemental-3` |
 
-## Source Inventory
+## Earlier Source Inventory Snapshot
 
 - Top-level folders: 236
 - Active linked folders: 136
 - Ledgered inactive/support folders: 100
 - Source-like files: 654
+
+## Prepared Capstone Integration
+
+`DPJ10-Dispatch-Refactor-Packs` supplies the runnable Dispatch Desk starter and separate reference for Design Patterns in Java's DPJ10 Capstone Refactor. The starter preserves a complete cluttered application and baseline. The reference adds independently replaceable rendering/storage collaborators, with a computation-only intermediate verified as a separate checkpoint. Shared oracle contracts cover all 240 bounded dispatch inputs, state/effect failures and snapshots; the optional batch stays independent of core. Use `tools/verify-capstone.py` under Java 21. Matching catalog lessons, pinned role imports and actual exported-workspace acceptance are tracked separately and remain pending.
