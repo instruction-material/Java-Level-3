@@ -30,3 +30,5 @@ Verify with `python3 tools/verify-studios.py`.
 The Structural Wrapper studio in `DPJ-Studio-Structural-Wrapper-Packs` supplies
 a separate text-source case with ordered counting/cache/transform wrappers,
 independent lifecycle checks and optional selective invalidation.
+
+The Architecture Judgment studio uses a versioned notebook to compare a helper-only cleanup with an injected repository. Its independent contracts preserve stale-edit, snapshot and audit-failure behavior; its application compiles without the memory implementation.

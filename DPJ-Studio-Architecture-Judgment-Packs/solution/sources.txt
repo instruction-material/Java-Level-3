@@ -1,0 +1,12 @@
+ArchitectureProbe.java
+ContractTests.java
+Main.java
+src/notebook/Composition.java
+src/notebook/api/Action.java
+src/notebook/api/AuditSink.java
+src/notebook/api/Note.java
+src/notebook/api/Notebook.java
+src/notebook/application/NotebookService.java
+src/notebook/legacy/LegacyNotebook.java
+src/notebook/memory/MemoryNotes.java
+src/notebook/ports/NoteRepository.java

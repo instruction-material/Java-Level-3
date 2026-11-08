@@ -207,6 +207,102 @@ def verify():
             result["controlledRegressionsRejected"] += 1
         results["controlledRegressionsRejected"] = 5
         result["packs"].append(results)
+
+        name = "DPJ-Studio-Architecture-Judgment-Packs"
+        source = ROOT / name
+        results = {"pack": name, "roles": {}, "optionalIndependentOfCore": False}
+        demo = "CREATED|plan|1\nEDITED|plan|2\ntrue\nfalse\nSketch\n1\n"
+        for role, count in [("starter", 9), ("solution", 12)]:
+            folder = source / role
+            output = work / ("architecture-" + role)
+            shutil.copytree(folder, output)
+            listed = (folder / "sources.txt").read_text().splitlines()
+            assert len(listed) == len(set(listed)) == count
+            assert set(listed) == {str(p.relative_to(folder)) for p in folder.rglob("*.java")}
+            for path in sorted(folder.rglob("*")):
+                if path.is_file():
+                    result["sourceHashes"][str(path.relative_to(ROOT))] = hashlib.sha256(path.read_bytes()).hexdigest()
+            compile_at(output)
+            result["rolesCompiled"] += 1
+            base = accepted_count(contracts(output, "base"), "Baseline architecture studio contracts")
+            core = accepted_count(contracts(output, "core"), "Core architecture studio contracts")
+            assert base >= 60 and core == base * 2, (base, core)
+            assert run([java, "-cp", "classes", "Main", "base"], output) == demo
+            assert run([java, "-cp", "classes", "Main"], output) == demo
+            record = {"baselineChecks": base, "coreChecks": core, "runnableBeforeEdits": True}
+            if role == "starter":
+                assert "UnsupportedOperationException: Implement optional versioned removal." in contracts(output, success=False)
+                record["optionalExplicitlyUnfinished"] = True
+            else:
+                full = accepted_count(contracts(output), "Complete architecture studio contracts")
+                assert full > core + 10, full
+                record["completeChecks"] = full
+            results["roles"][role] = record
+        common = ["Main.java", "ContractTests.java", "README.md", "DECISIONS.md",
+                  "src/notebook/legacy/LegacyNotebook.java"]
+        common += ["src/notebook/api/" + p for p in ["Note.java", "Notebook.java", "AuditSink.java", "Action.java"]]
+        for path in common:
+            assert (source / "starter" / path).read_bytes() == (source / "solution" / path).read_bytes(), path
+        results["baselineAndOracleIdenticalAcrossRoles"] = True
+        intermediate = work / "architecture-helper-only"
+        shutil.copytree(source / "starter", intermediate)
+        path = intermediate / "src/notebook/NotebookDesk.java"
+        text = path.read_text()
+        before = ('        Note.validId(id);\n'
+                  '        Note.validText(text);\n'
+                  '        Note.validVersion(expectedVersion);\n'
+                  '        Note previous = notes.get(id);')
+        assert text.count(before) == 1
+        text = text.replace(before, "        Note previous = currentForEdit(id, expectedVersion, text);")
+        helper = ('\n    private Note currentForEdit(String id, long version, String text) {\n'
+                  '        Note.validId(id);\n        Note.validText(text);\n'
+                  '        Note.validVersion(version);\n        return notes.get(id);\n    }\n')
+        path.write_text(text[:-2] + helper + text[-2:])
+        compile_at(intermediate)
+        assert accepted_count(contracts(intermediate, "core"), "Core architecture studio contracts") == core
+        results["helperOnlyIntermediateAccepted"] = True
+        core_only = work / "architecture-core-only"
+        shutil.copytree(source / "solution", core_only)
+        path = core_only / "src/notebook/application/NotebookService.java"
+        path.write_text(method_body(path.read_text(), "public boolean remove(",
+                        '        throw new UnsupportedOperationException("Implement optional versioned removal.");'))
+        compile_at(core_only)
+        assert accepted_count(contracts(core_only, "core"), "Core architecture studio contracts") == core
+        assert "UnsupportedOperationException: Implement optional versioned removal." in contracts(core_only, success=False)
+        results["optionalIndependentOfCore"] = True
+        isolated = work / "architecture-isolated"
+        isolated.mkdir()
+        allowed = ["src/notebook/api", "src/notebook/ports", "src/notebook/application"]
+        for directory in allowed:
+            shutil.copytree(source / "solution" / directory, isolated / directory)
+        shutil.copyfile(source / "solution/ArchitectureProbe.java", isolated / "ArchitectureProbe.java")
+        listed = sorted(str(p.relative_to(isolated)) for p in isolated.rglob("*.java"))
+        (isolated / "sources.txt").write_text("\n".join(listed) + "\n")
+        compile_at(isolated)
+        assert run([java, "-cp", "classes", "ArchitectureProbe"], isolated) == "Isolated application seam and failure contracts passed\n"
+        results["applicationCompiledWithoutInfrastructure"] = True
+        results["injectedFakeStorageAndAuditOrderingAccepted"] = True
+        mutations = [
+            ("src/notebook/application/NotebookService.java", "Math.addExact(previous.version(), 1)", "Math.addExact(previous.version(), 2)", "core"),
+            ("src/notebook/application/NotebookService.java", "previous == null || previous.version() != expectedVersion", "previous == null", "core"),
+            ("src/notebook/api/Note.java", "> 80", "> 81", "core"),
+            ("src/notebook/application/NotebookService.java", "repository.save(note);\n        audit.record(Action.CREATED, note);", "audit.record(Action.CREATED, note);\n        repository.save(note);", "core"),
+            ("src/notebook/memory/MemoryNotes.java", "List.copyOf(notes.values())", "new java.util.ArrayList<>(notes.values())", "core"),
+            ("src/notebook/application/NotebookService.java", "repository.remove(id);", "// Removal deliberately omitted.", "all"),
+        ]
+        for index, (name, old, new, mode) in enumerate(mutations):
+            folder = work / ("architecture-regression-" + str(index))
+            shutil.copytree(source / "solution", folder)
+            path = folder / name
+            text = path.read_text()
+            expected = 2 if old == "previous == null || previous.version() != expectedVersion" else 1
+            assert text.count(old) == expected, (name, old)
+            path.write_text(text.replace(old, new, 1))
+            compile_at(folder)
+            assert "AssertionError" in contracts(folder, mode, success=False)
+            result["controlledRegressionsRejected"] += 1
+        results["controlledRegressionsRejected"] = len(mutations)
+        result["packs"].append(results)
     result["temporaryBuildsCleaned"] = True
     result["accepted"] = True
     return result

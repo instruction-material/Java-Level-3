@@ -40,5 +40,6 @@ jobs:
             output/java-studio-contracts/
             DPJ-Studio-Strategy-Selection-Packs/
             DPJ-Studio-Structural-Wrapper-Packs/
+            DPJ-Studio-Architecture-Judgment-Packs/
           if-no-files-found: error
           retention-days: 14

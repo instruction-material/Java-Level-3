@@ -1,0 +1,9 @@
+ContractTests.java
+Main.java
+src/notebook/Composition.java
+src/notebook/NotebookDesk.java
+src/notebook/api/Action.java
+src/notebook/api/AuditSink.java
+src/notebook/api/Note.java
+src/notebook/api/Notebook.java
+src/notebook/legacy/LegacyNotebook.java
