@@ -1,0 +1,41 @@
+name: Java refactoring contracts
+on:
+  push:
+    paths:
+      - "DPR1-Safe-Refactoring-Packs/**"
+      - "tools/verify-refactoring.py"
+      - "tools/verify-recursion.py"
+      - ".github/workflows/refactoring-contracts.yml"
+  pull_request:
+    paths:
+      - "DPR1-Safe-Refactoring-Packs/**"
+      - "tools/verify-refactoring.py"
+      - ".github/workflows/refactoring-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: refactoring-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile both roles, intermediate states and controlled regressions
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 tools/verify-refactoring.py
+      - name: Retain exact sources and native result
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-refactoring-native-contracts
+          path: |
+            output/java-refactoring-contracts/
+            DPR1-Safe-Refactoring-Packs/
+          if-no-files-found: error
+          retention-days: 14
