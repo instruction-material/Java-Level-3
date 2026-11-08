@@ -1,0 +1,41 @@
+name: Java ownership move contracts
+on:
+  push:
+    paths:
+      - "DPR3-Contact-Ownership-Packs/**"
+      - "tools/verify-ownership-move.py"
+      - "tools/verify-recursion.py"
+      - ".github/workflows/ownership-move-contracts.yml"
+  pull_request:
+    paths:
+      - "DPR3-Contact-Ownership-Packs/**"
+      - "tools/verify-ownership-move.py"
+      - ".github/workflows/ownership-move-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ownership-move-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile both roles, intermediate states and controlled regressions
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 tools/verify-ownership-move.py
+      - name: Retain exact sources and native result
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-ownership-move-native-contracts
+          path: |
+            output/java-ownership-move-contracts/
+            DPR3-Contact-Ownership-Packs/
+          if-no-files-found: error
+          retention-days: 14
