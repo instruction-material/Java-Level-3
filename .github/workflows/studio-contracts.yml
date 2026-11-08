@@ -39,5 +39,6 @@ jobs:
           path: |
             output/java-studio-contracts/
             DPJ-Studio-Strategy-Selection-Packs/
+            DPJ-Studio-Structural-Wrapper-Packs/
           if-no-files-found: error
           retention-days: 14

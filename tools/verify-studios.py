@@ -122,6 +122,91 @@ def verify():
             result["controlledRegressionsRejected"] += 1
         results["controlledRegressionsRejected"] = 5
         result["packs"].append(results)
+
+        name = "DPJ-Studio-Structural-Wrapper-Packs"
+        source = ROOT / name
+        results = {"pack": name, "roles": {}, "optionalIndependentOfCore": False}
+        demo = "tag:HI\ntag:HI\n2\n1\ntag:HI\n2\n"
+        for role, count in [("starter", 5), ("solution", 9)]:
+            folder = source / role
+            output = work / ("wrapper-" + role)
+            shutil.copytree(folder, output)
+            listed = (folder / "sources.txt").read_text().splitlines()
+            assert len(listed) == len(set(listed)) == count
+            assert set(listed) == {str(p.relative_to(folder)) for p in folder.rglob("*.java")}
+            for path in sorted(folder.rglob("*")):
+                if path.is_file():
+                    result["sourceHashes"][str(path.relative_to(ROOT))] = hashlib.sha256(path.read_bytes()).hexdigest()
+            compile_at(output)
+            result["rolesCompiled"] += 1
+            base = accepted_count(contracts(output, "base"), "Baseline wrapper studio contracts")
+            core = accepted_count(contracts(output, "core"), "Core wrapper studio contracts")
+            assert base == 410 and core == 820, (base, core)
+            assert run([java, "-cp", "classes", "Main", "base"], output) == demo
+            assert run([java, "-cp", "classes", "Main"], output) == demo
+            record = {"baselineChecks": base, "coreChecks": core, "runnableBeforeEdits": True}
+            if role == "starter":
+                assert "UnsupportedOperationException: Implement optional selective invalidation." in contracts(output, success=False)
+                record["optionalExplicitlyUnfinished"] = True
+            else:
+                full = accepted_count(contracts(output), "Complete wrapper studio contracts")
+                assert full == 839, full
+                record["completeChecks"] = full
+            results["roles"][role] = record
+        for path in ["Main.java", "ContractTests.java", "README.md", "DECISIONS.md",
+                     "src/wrapping/Source.java", "src/wrapping/legacy/LegacyReader.java"]:
+            assert (source / "starter" / path).read_bytes() == (source / "solution" / path).read_bytes(), path
+        results["baselineAndOracleIdenticalAcrossRoles"] = True
+        intermediate = work / "wrapper-helper-only"
+        shutil.copytree(source / "starter", intermediate)
+        path = intermediate / "src/wrapping/ReadDesk.java"
+        text = path.read_text()
+        old = ('        String value = Objects.requireNonNull(source.load(key), "source result");\n'
+               '        if (upper) value = value.toUpperCase(Locale.ROOT);\n'
+               '        value = prefix + value;')
+        assert text.count(old) == 1
+        text = text.replace(old, "        String value = transformed(key);")
+        helper = ('\n    private String transformed(String key) {\n'
+                  '        String value = Objects.requireNonNull(source.load(key), "source result");\n'
+                  '        if (upper) value = value.toUpperCase(Locale.ROOT);\n'
+                  '        return prefix + value;\n    }\n')
+        path.write_text(text[:-2] + helper + text[-2:])
+        compile_at(intermediate)
+        assert accepted_count(contracts(intermediate, "core"), "Core wrapper studio contracts") == 820
+        results["helperOnlyIntermediateAccepted"] = True
+        core_only = work / "wrapper-core-only"
+        shutil.copytree(source / "solution", core_only)
+        path = core_only / "src/wrapping/ReadDesk.java"
+        path.write_text(method_body(path.read_text(), "public boolean invalidate(",
+                        '        throw new UnsupportedOperationException("Implement optional selective invalidation.");'))
+        compile_at(core_only)
+        assert accepted_count(contracts(core_only, "core"), "Core wrapper studio contracts") == 820
+        assert "UnsupportedOperationException: Implement optional selective invalidation." in contracts(core_only, success=False)
+        results["optionalIndependentOfCore"] = True
+        right_order = ('        Source pipeline = source;\n'
+                       '        if (upper) pipeline = new UpperSource(pipeline);\n'
+                       '        pipeline = new PrefixSource(pipeline, prefix);')
+        wrong_order = ('        Source pipeline = new PrefixSource(source, prefix);\n'
+                       '        if (upper) pipeline = new UpperSource(pipeline);')
+        mutations = [
+            ("src/wrapping/layers/CacheSource.java", "values.put(key, value);", "// Cache deliberately bypassed.", "core"),
+            ("src/wrapping/layers/CountingSource.java", "attempts++;", "attempts += 2;", "core"),
+            ("src/wrapping/ReadDesk.java", right_order, wrong_order, "core"),
+            ("src/wrapping/Source.java", "{0,15}", "{0,16}", "core"),
+            ("src/wrapping/ReadDesk.java", "return cache != null && cache.invalidate(key);", "return false;", "all"),
+        ]
+        for index, (name, old, new, mode) in enumerate(mutations):
+            folder = work / ("wrapper-regression-" + str(index))
+            shutil.copytree(source / "solution", folder)
+            path = folder / name
+            text = path.read_text()
+            assert text.count(old) == 1, (name, old)
+            path.write_text(text.replace(old, new, 1))
+            compile_at(folder)
+            assert "AssertionError" in contracts(folder, mode, success=False)
+            result["controlledRegressionsRejected"] += 1
+        results["controlledRegressionsRejected"] = 5
+        result["packs"].append(results)
     result["temporaryBuildsCleaned"] = True
     result["accepted"] = True
     return result

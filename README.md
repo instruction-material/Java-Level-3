@@ -26,3 +26,7 @@ a Strategy reference, a helper-only counterfactual and independent Java 21
 contracts. The optional injected-rule method is separate from the core refactor.
 Each role includes its exact build list, supplied cases and decision record.
 Verify with `python3 tools/verify-studios.py`.
+
+The Structural Wrapper studio in `DPJ-Studio-Structural-Wrapper-Packs` supplies
+a separate text-source case with ordered counting/cache/transform wrappers,
+independent lifecycle checks and optional selective invalidation.
