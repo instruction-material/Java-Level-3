@@ -1,0 +1,9 @@
+ContractTests.java
+Main.java
+src/dispatch/Composition.java
+src/dispatch/app/Desk.java
+src/dispatch/domain/Dispatch.java
+src/dispatch/domain/Request.java
+src/dispatch/legacy/LegacyDesk.java
+src/dispatch/ports/DeskApi.java
+src/dispatch/ports/NoticeSink.java
