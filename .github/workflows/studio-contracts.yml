@@ -1,0 +1,43 @@
+name: Applied Java studio contracts
+on:
+  push:
+    paths:
+      - "DPJ-Studio-Strategy-Selection-Packs/**"
+      - "DPJ-Studio-Structural-Wrapper-Packs/**"
+      - "DPJ-Studio-Architecture-Judgment-Packs/**"
+      - "tools/verify-studios.py"
+      - "tools/verify-recursion.py"
+      - ".github/workflows/studio-contracts.yml"
+  pull_request:
+    paths:
+      - "DPJ-Studio-*/**"
+      - "tools/verify-studios.py"
+      - ".github/workflows/studio-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: applied-studios-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile both roles, independent contracts and controlled regressions
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 tools/verify-studios.py
+      - name: Retain the exact source and native verification
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-applied-studio-native-contracts
+          path: |
+            output/java-studio-contracts/
+            DPJ-Studio-Strategy-Selection-Packs/
+          if-no-files-found: error
+          retention-days: 14
