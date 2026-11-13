@@ -1,0 +1,15 @@
+src/lab/AdmissionPolicy.java
+src/lab/AuditTrail.java
+src/lab/BookingClient.java
+src/lab/BookingData.java
+src/lab/CoreChecks.java
+src/lab/CoreDemo.java
+src/lab/GatePolicy.java
+src/lab/Inputs.java
+src/lab/LegacyGate.java
+src/lab/optional/FeePolicies.java
+src/lab/optional/LegacyOptionalWorkflow.java
+src/lab/optional/OptionalChecks.java
+src/lab/optional/OptionalDemo.java
+src/lab/optional/OptionalWorkflow.java
+src/lab/optional/StatusReporter.java

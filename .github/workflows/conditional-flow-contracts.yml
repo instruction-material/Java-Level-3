@@ -1,0 +1,42 @@
+name: Java conditional flow contracts
+on:
+  push:
+    paths:
+      - "DPR5-Conditional-Flow-Packs/**"
+      - "tools/verify-conditional-flow.py"
+      - ".github/workflows/conditional-flow-contracts.yml"
+  pull_request:
+    paths:
+      - "DPR5-Conditional-Flow-Packs/**"
+      - "tools/verify-conditional-flow.py"
+      - ".github/workflows/conditional-flow-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: conditional-flow-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CLASSES_FAMILY_TASK_ID: java-conditional-flow-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile roles and verify decisions, probes and optional boundaries
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 -I -B tools/verify-conditional-flow.py
+      - name: Retain original source and native evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-conditional-flow-native-contracts
+          path: |
+            output/java-conditional-flow-contracts/
+            DPR5-Conditional-Flow-Packs/
+          if-no-files-found: error
+          retention-days: 14
