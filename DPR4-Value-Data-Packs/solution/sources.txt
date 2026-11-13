@@ -1,0 +1,9 @@
+ClientCompatibility.java
+ContractTests.java
+Main.java
+src/supplies/ItemCode.java
+src/supplies/LegacySupplyRequest.java
+src/supplies/RequestCodec.java
+src/supplies/RequestLine.java
+src/supplies/ServiceLevel.java
+src/supplies/SupplyRequest.java

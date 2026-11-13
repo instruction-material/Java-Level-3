@@ -1,0 +1,40 @@
+name: Java value data contracts
+on:
+  push:
+    paths:
+      - "DPR4-Value-Data-Packs/**"
+      - "tools/verify-value-data.py"
+      - ".github/workflows/value-data-contracts.yml"
+  pull_request:
+    paths:
+      - "DPR4-Value-Data-Packs/**"
+      - "tools/verify-value-data.py"
+      - ".github/workflows/value-data-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: value-data-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile exact roles, client compatibility and controlled regressions
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 -I -B tools/verify-value-data.py
+      - name: Retain original source and native evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-value-data-native-contracts
+          path: |
+            output/java-value-data-contracts/
+            DPR4-Value-Data-Packs/
+          if-no-files-found: error
+          retention-days: 14
