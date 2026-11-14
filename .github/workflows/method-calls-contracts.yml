@@ -1,0 +1,42 @@
+name: Java method-call API contracts
+on:
+  push:
+    paths:
+      - "DPR6-Method-Calls-Packs/**"
+      - "tools/verify-method-calls.py"
+      - ".github/workflows/method-calls-contracts.yml"
+  pull_request:
+    paths:
+      - "DPR6-Method-Calls-Packs/**"
+      - "tools/verify-method-calls.py"
+      - ".github/workflows/method-calls-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: method-calls-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CLASSES_FAMILY_TASK_ID: java-method-calls-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile roles and verify API compatibility, pure queries and optional queue boundaries
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 -I -B tools/verify-method-calls.py
+      - name: Retain original source and native evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-method-calls-native-contracts
+          path: |
+            output/java-method-calls-contracts/
+            DPR6-Method-Calls-Packs/
+          if-no-files-found: error
+          retention-days: 14
