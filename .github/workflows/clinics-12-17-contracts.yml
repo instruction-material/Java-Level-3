@@ -1,0 +1,59 @@
+name: Java remaining refactoring clinic contracts
+on:
+  push:
+    paths:
+      - "Clinic12-Variant-Packs/**"
+      - "Clinic13-Parameter-Packs/**"
+      - "Clinic14-Calculation-Packs/**"
+      - "Clinic15-Workflow-Packs/**"
+      - "Clinic16-Absence-Packs/**"
+      - "Clinic17-Sequencing-Packs/**"
+      - "tools/verify-clinics-12-17.py"
+      - "tools/clinics-12-17-contracts.json"
+      - ".github/workflows/clinics-12-17-contracts.yml"
+  pull_request:
+    paths:
+      - "Clinic12-Variant-Packs/**"
+      - "Clinic13-Parameter-Packs/**"
+      - "Clinic14-Calculation-Packs/**"
+      - "Clinic15-Workflow-Packs/**"
+      - "Clinic16-Absence-Packs/**"
+      - "Clinic17-Sequencing-Packs/**"
+      - "tools/verify-clinics-12-17.py"
+      - "tools/clinics-12-17-contracts.json"
+      - ".github/workflows/clinics-12-17-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: clinics-12-17-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      CLASSES_FAMILY_TASK_ID: java-clinics-12-17-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify all six before/reference designs, safe checkpoints, public clients and independent exercises
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 -I -B tools/verify-clinics-12-17.py
+      - name: Retain original source and native evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-clinics-12-17-native-contracts
+          path: |
+            output/java-clinics-12-17-contracts/
+            Clinic12-Variant-Packs/
+            Clinic13-Parameter-Packs/
+            Clinic14-Calculation-Packs/
+            Clinic15-Workflow-Packs/
+            Clinic16-Absence-Packs/
+            Clinic17-Sequencing-Packs/
+          if-no-files-found: error
+          retention-days: 14

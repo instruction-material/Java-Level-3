@@ -1,0 +1,12 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/api/BoardAPI.java
+src/api/BoardRows.java
+src/api/BoardStats.java
+src/api/Task.java
+src/app/BoardReport.java
+src/check/Checks.java
+src/extension/BoardPreview.java
+src/legacy/LegacyBoard.java
+src/transfer/SnapshotDiff.java

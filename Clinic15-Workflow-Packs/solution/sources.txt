@@ -1,0 +1,14 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/api/Documents.java
+src/api/Rows.java
+src/api/StepHook.java
+src/app/DocumentService.java
+src/app/DocumentTemplate.java
+src/app/MarkedDocument.java
+src/app/PlainDocument.java
+src/check/Checks.java
+src/extension/NumberedRows.java
+src/legacy/LegacyDocuments.java
+src/transfer/WorkflowTrace.java

@@ -1,0 +1,13 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/api/Greetings.java
+src/api/Profile.java
+src/app/GreetingService.java
+src/app/GuestRecipient.java
+src/app/KnownRecipient.java
+src/app/Recipient.java
+src/check/Checks.java
+src/extension/StrictGreeting.java
+src/legacy/LegacyGreetings.java
+src/transfer/ProfileLookup.java

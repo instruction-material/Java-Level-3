@@ -1,0 +1,715 @@
+{
+  "12": {
+    "clinic": 12,
+    "pack": "Clinic12-Variant-Packs",
+    "common": [
+      "CompatibilityClient.java",
+      "ContractChecks.java",
+      "Main.java",
+      "src/api/Messages.java",
+      "src/api/RenderRule.java",
+      "src/api/Rules.java",
+      "src/check/Checks.java",
+      "src/legacy/LegacyMessages.java"
+    ],
+    "roleFiles": {
+      "starter": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/Messages.java",
+        "src/api/RenderRule.java",
+        "src/api/Rules.java",
+        "src/app/MessageService.java",
+        "src/check/Checks.java",
+        "src/extension/PrefixRule.java",
+        "src/legacy/LegacyMessages.java",
+        "src/transfer/RenderBatch.java"
+      ],
+      "solution": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/Messages.java",
+        "src/api/RenderRule.java",
+        "src/api/Rules.java",
+        "src/app/CompactRule.java",
+        "src/app/MessageService.java",
+        "src/app/PlainRule.java",
+        "src/check/Checks.java",
+        "src/extension/PrefixRule.java",
+        "src/legacy/LegacyMessages.java",
+        "src/transfer/RenderBatch.java"
+      ]
+    },
+    "title": "Replace conditional branches with runtime variants",
+    "coreUnfinished": "Complete rule registry",
+    "unfinished": {
+      "transfer": "Complete batch rendering",
+      "extension": "Complete prefix rule"
+    },
+    "completions": {
+      "core": [
+        "src/app/MessageService.java",
+        "src/app/PlainRule.java",
+        "src/app/CompactRule.java"
+      ],
+      "transfer": [
+        "src/transfer/RenderBatch.java"
+      ],
+      "extension": [
+        "src/extension/PrefixRule.java"
+      ]
+    },
+    "mainOutputs": {
+      "baseline": "text=go\n",
+      "core": "text=go\n",
+      "transfer": "2|go\n0|\n",
+      "extension": "!text=go\n"
+    },
+    "probe": "import app.MessageService;\nimport api.RenderRule;\nimport java.util.*;\npublic final class Probe {\n    private Probe() {}\n    public static void main(String[] args) {\n        RenderRule caps=text->text.toUpperCase(Locale.ROOT);\n        MessageService messages=new MessageService(Map.of(\"caps\",caps));\n        if(!messages.render(\"caps\",\"go\").equals(\"GO\"))throw new AssertionError(\"variant\");\n        System.out.println(\"probe passed\");\n    }\n}\n",
+    "controls": [
+      {
+        "name": "compact-length",
+        "file": "src/app/CompactRule.java",
+        "before": "message.length()",
+        "after": "0",
+        "mode": "core"
+      },
+      {
+        "name": "registry-alias",
+        "file": "src/app/MessageService.java",
+        "before": "this.rules=Collections.unmodifiableMap(copy);",
+        "after": "this.rules=rules;",
+        "mode": "core",
+        "marker": "IllegalArgumentException: mode"
+      },
+      {
+        "name": "batch-order",
+        "file": "src/transfer/RenderBatch.java",
+        "before": "for(String line:copy)output.append(renderer.render(mode,line));",
+        "after": "Collections.reverse(copy); for(String line:copy)output.append(renderer.render(mode,line));",
+        "mode": "transfer"
+      },
+      {
+        "name": "prefix-order",
+        "file": "src/extension/PrefixRule.java",
+        "before": "return prefix+Objects.requireNonNull(delegate.render(message),\"output\");",
+        "after": "return Objects.requireNonNull(delegate.render(message),\"output\")+prefix;",
+        "mode": "extension"
+      }
+    ],
+    "intermediates": [
+      {
+        "files": {
+          "src/app/MessageService.java": "package app;\nimport api.*;\nimport legacy.LegacyMessages;\nimport java.util.Map;\npublic final class MessageService implements Messages {\n    public MessageService() {}\n    public MessageService(Map<String,RenderRule> rules) {\n        throw new UnsupportedOperationException(\"Complete rule registry\");\n    }\n    public String render(String mode,String message) {\n        java.util.Objects.requireNonNull(mode,\"mode\");Rules.text(message);\n        if(mode.equals(\"plain\"))return new PlainRule().render(message);\n        return new LegacyMessages().render(mode,message);\n    }\n}\n",
+          "src/app/PlainRule.java": "package app;\nimport api.RenderRule;\npublic final class PlainRule implements RenderRule {\n    public PlainRule() {}\n    public String render(String message) { return \"text=\"+message+\"\\n\"; }\n}\n"
+        },
+        "label": "Migrate only the plain branch; compact remains in legacy",
+        "mode": "baseline"
+      }
+    ]
+  },
+  "13": {
+    "clinic": 13,
+    "pack": "Clinic13-Parameter-Packs",
+    "common": [
+      "CompatibilityClient.java",
+      "ContractChecks.java",
+      "Main.java",
+      "src/api/RangeRules.java",
+      "src/api/Ranges.java",
+      "src/check/Checks.java",
+      "src/legacy/LegacyRanges.java"
+    ],
+    "roleFiles": {
+      "starter": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/RangeRules.java",
+        "src/api/Ranges.java",
+        "src/app/RangeService.java",
+        "src/app/RangeSpec.java",
+        "src/check/Checks.java",
+        "src/extension/MergeRanges.java",
+        "src/legacy/LegacyRanges.java",
+        "src/transfer/EveryOther.java"
+      ],
+      "solution": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/RangeRules.java",
+        "src/api/Ranges.java",
+        "src/app/RangeService.java",
+        "src/app/RangeSpec.java",
+        "src/check/Checks.java",
+        "src/extension/MergeRanges.java",
+        "src/legacy/LegacyRanges.java",
+        "src/transfer/EveryOther.java"
+      ]
+    },
+    "title": "Introduce a coherent parameter object",
+    "coreUnfinished": "Complete parameter object",
+    "unfinished": {
+      "transfer": "Complete whole-list selection",
+      "extension": "Complete unique merge"
+    },
+    "completions": {
+      "core": [
+        "src/app/RangeSpec.java",
+        "src/app/RangeService.java"
+      ],
+      "transfer": [
+        "src/transfer/EveryOther.java"
+      ],
+      "extension": [
+        "src/extension/MergeRanges.java"
+      ]
+    },
+    "mainOutputs": {
+      "baseline": "2..9/3:[2, 5, 8]\n",
+      "core": "2..9/3:[2, 5, 8]\n",
+      "transfer": "[2, 8]\n",
+      "extension": "[1, 2, 5, 8, 9]\n"
+    },
+    "probe": "import app.*;\nimport java.util.List;\npublic final class Probe {\n    private Probe() {}\n    public static void main(String[] args) {\n        RangeSpec range=new RangeSpec(2,9,3);\n        RangeService service=new RangeService();\n        if(!service.values(range).equals(List.of(2,5,8)))throw new AssertionError(\"whole object\");\n        if(!service.values(2,9,3).equals(service.values(range)))throw new AssertionError(\"old adapter\");\n        System.out.println(\"probe passed\");\n    }\n}\n",
+    "controls": [
+      {
+        "name": "end-exclusive",
+        "file": "src/app/RangeService.java",
+        "before": "value<=range.end()",
+        "after": "value<range.end()",
+        "mode": "core"
+      },
+      {
+        "name": "bad-clump-validation",
+        "file": "src/app/RangeSpec.java",
+        "before": "RangeRules.validate(start,end,step);",
+        "after": "RangeRules.validate(start,end,1);",
+        "mode": "core"
+      },
+      {
+        "name": "selection-odd-indices",
+        "file": "src/transfer/EveryOther.java",
+        "before": "int index=0;",
+        "after": "int index=1;",
+        "mode": "transfer"
+      },
+      {
+        "name": "merge-duplicates",
+        "file": "src/extension/MergeRanges.java",
+        "before": "Set<Integer> merged=new TreeSet<>(one);merged.addAll(two);",
+        "after": "List<Integer> merged=new ArrayList<>(one);merged.addAll(two);Collections.sort(merged);",
+        "mode": "extension"
+      }
+    ],
+    "intermediates": [
+      {
+        "files": {
+          "src/app/RangeSpec.java": "package app;\nimport api.RangeRules;\npublic record RangeSpec(int start,int end,int step) {\n    public RangeSpec {RangeRules.validate(start,end,step);}\n}\n"
+        },
+        "label": "Introduce validated value object while old client calls remain unchanged",
+        "mode": "baseline"
+      }
+    ]
+  },
+  "14": {
+    "clinic": 14,
+    "pack": "Clinic14-Calculation-Packs",
+    "common": [
+      "CompatibilityClient.java",
+      "ContractChecks.java",
+      "Main.java",
+      "src/api/BatchTotal.java",
+      "src/api/EnergyAPI.java",
+      "src/api/EnergyResult.java",
+      "src/api/EnergyRules.java",
+      "src/check/Checks.java",
+      "src/legacy/LegacyEnergy.java"
+    ],
+    "roleFiles": {
+      "starter": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/BatchTotal.java",
+        "src/api/EnergyAPI.java",
+        "src/api/EnergyResult.java",
+        "src/api/EnergyRules.java",
+        "src/app/EnergyMeter.java",
+        "src/check/Checks.java",
+        "src/extension/EnergyBatch.java",
+        "src/legacy/LegacyEnergy.java",
+        "src/transfer/EnergyLoss.java"
+      ],
+      "solution": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/BatchTotal.java",
+        "src/api/EnergyAPI.java",
+        "src/api/EnergyResult.java",
+        "src/api/EnergyRules.java",
+        "src/app/EnergyMeter.java",
+        "src/check/Checks.java",
+        "src/extension/EnergyBatch.java",
+        "src/legacy/LegacyEnergy.java",
+        "src/transfer/EnergyLoss.java"
+      ]
+    },
+    "title": "Split temporaries and extract calculation queries",
+    "coreUnfinished": "Complete named queries",
+    "unfinished": {
+      "transfer": "Complete loss percentage",
+      "extension": "Complete batch total"
+    },
+    "completions": {
+      "core": [
+        "src/app/EnergyMeter.java"
+      ],
+      "transfer": [
+        "src/transfer/EnergyLoss.java"
+      ],
+      "extension": [
+        "src/extension/EnergyBatch.java"
+      ]
+    },
+    "mainOutputs": {
+      "baseline": "EnergyResult[raw=99, usable=49, lost=50]\n",
+      "core": "EnergyResult[raw=99, usable=49, lost=50]\n",
+      "transfer": "50\n",
+      "extension": "BatchTotal[raw=199, usable=149, lost=50]\n"
+    },
+    "probe": "import app.EnergyMeter;\npublic final class Probe {\n    private Probe() {}\n    public static void main(String[] args) {\n        EnergyMeter meter=new EnergyMeter();\n        int raw=meter.raw(33,3),usable=meter.usable(raw,50);\n        if(raw!=99||usable!=49)throw new AssertionError(\"intermediate values\");\n        if(meter.measure(33,3,50).lost()!=50)throw new AssertionError(\"loss\");\n        System.out.println(\"probe passed\");\n    }\n}\n",
+    "controls": [
+      {
+        "name": "early-rounding",
+        "file": "src/app/EnergyMeter.java",
+        "before": "raw*efficiency/100",
+        "after": "raw/100*efficiency",
+        "mode": "core"
+      },
+      {
+        "name": "lost-is-usable",
+        "file": "src/app/EnergyMeter.java",
+        "before": "raw,usable,raw-usable",
+        "after": "raw,usable,usable",
+        "mode": "core",
+        "marker": "IllegalArgumentException: lost"
+      },
+      {
+        "name": "loss-denominator",
+        "file": "src/transfer/EnergyLoss.java",
+        "before": "result.lost()*100/result.raw()",
+        "after": "result.usable()*100/result.raw()",
+        "mode": "transfer"
+      },
+      {
+        "name": "batch-last-only",
+        "file": "src/extension/EnergyBatch.java",
+        "before": "raw+=result.raw();usable+=result.usable();lost+=result.lost();",
+        "after": "raw=result.raw();usable=result.usable();lost=result.lost();",
+        "mode": "extension"
+      }
+    ],
+    "intermediates": [
+      {
+        "files": {
+          "src/app/EnergyMeter.java": "package app;\nimport api.*;\nimport legacy.LegacyEnergy;\npublic final class EnergyMeter implements EnergyAPI {\n    public EnergyMeter() {}\n    public EnergyResult measure(int watts,int seconds,int efficiency) {\n        EnergyRules.watts(watts);EnergyRules.seconds(seconds);EnergyRules.efficiency(efficiency);\n        int rawJoules=watts*seconds;\n        int usableJoules=rawJoules*efficiency/100;\n        return new EnergyResult(rawJoules,usableJoules,rawJoules-usableJoules);\n    }\n    public int raw(int watts,int seconds) {throw new UnsupportedOperationException(\"Complete named queries\");}\n    public int usable(int raw,int efficiency) {throw new UnsupportedOperationException(\"Complete named queries\");}\n}\n"
+        },
+        "label": "Split the reused temporary before extracting public queries",
+        "mode": "baseline"
+      }
+    ]
+  },
+  "15": {
+    "clinic": 15,
+    "pack": "Clinic15-Workflow-Packs",
+    "common": [
+      "CompatibilityClient.java",
+      "ContractChecks.java",
+      "Main.java",
+      "src/api/Documents.java",
+      "src/api/Rows.java",
+      "src/api/StepHook.java",
+      "src/check/Checks.java",
+      "src/legacy/LegacyDocuments.java"
+    ],
+    "roleFiles": {
+      "starter": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/Documents.java",
+        "src/api/Rows.java",
+        "src/api/StepHook.java",
+        "src/app/DocumentService.java",
+        "src/app/DocumentTemplate.java",
+        "src/check/Checks.java",
+        "src/extension/NumberedRows.java",
+        "src/legacy/LegacyDocuments.java",
+        "src/transfer/WorkflowTrace.java"
+      ],
+      "solution": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/Documents.java",
+        "src/api/Rows.java",
+        "src/api/StepHook.java",
+        "src/app/DocumentService.java",
+        "src/app/DocumentTemplate.java",
+        "src/app/MarkedDocument.java",
+        "src/app/PlainDocument.java",
+        "src/check/Checks.java",
+        "src/extension/NumberedRows.java",
+        "src/legacy/LegacyDocuments.java",
+        "src/transfer/WorkflowTrace.java"
+      ]
+    },
+    "title": "Extract a shared workflow and deliberate hooks",
+    "coreUnfinished": "Complete template skeleton",
+    "unfinished": {
+      "transfer": "Complete workflow trace",
+      "extension": "Complete numbered rows"
+    },
+    "completions": {
+      "core": [
+        "src/app/DocumentService.java",
+        "src/app/DocumentTemplate.java",
+        "src/app/PlainDocument.java",
+        "src/app/MarkedDocument.java"
+      ],
+      "transfer": [
+        "src/transfer/WorkflowTrace.java"
+      ],
+      "extension": [
+        "src/extension/NumberedRows.java"
+      ]
+    },
+    "mainOutputs": {
+      "baseline": "begin\na\nb\nend\n",
+      "core": "begin\na\nb\nend\n",
+      "transfer": "[start, row:a, row:b, end]\n",
+      "extension": "ROWS\n1:a\n2:b\ntotal=2\n"
+    },
+    "probe": "import app.DocumentTemplate;\nimport java.util.List;\npublic final class Probe {\n    private Probe() {}\n    public static void main(String[] args) {\n        DocumentTemplate custom=new DocumentTemplate() {\n            protected String header(){return \"H\\n\";}\n            protected String line(String row){return row+\"\\n\";}\n        };\n        if(!custom.build(List.of(\"a\")).equals(\"H\\na\\n\"))throw new AssertionError(\"optional footer\");\n        System.out.println(\"probe passed\");\n    }\n}\n",
+    "controls": [
+      {
+        "name": "footer-before-lines",
+        "file": "src/app/DocumentTemplate.java",
+        "before": "for(String row:input)text.append(Objects.requireNonNull(line(row),\"line\"));",
+        "after": "text.append(Objects.requireNonNull(footer(),\"footer\")); for(String row:input)text.append(Objects.requireNonNull(line(row),\"line\"));",
+        "mode": "core"
+      },
+      {
+        "name": "mandatory-footer",
+        "file": "src/app/DocumentTemplate.java",
+        "before": "protected String footer(){return \"\";}",
+        "after": "protected String footer(){return \"end\\n\";}",
+        "mode": "core"
+      },
+      {
+        "name": "wrong-start-stage",
+        "file": "src/transfer/WorkflowTrace.java",
+        "before": "hook.accept(\"start\",\"\");",
+        "after": "hook.accept(\"end\",\"\");",
+        "mode": "transfer"
+      },
+      {
+        "name": "inverted-footer",
+        "file": "src/extension/NumberedRows.java",
+        "before": "if(footer)",
+        "after": "if(!footer)",
+        "mode": "extension"
+      }
+    ],
+    "intermediates": [
+      {
+        "files": {
+          "src/app/DocumentService.java": "package app;\nimport api.*;\nimport java.util.*;\npublic final class DocumentService implements Documents {\n    public DocumentService() {}\n    public String build(String kind,List<String> rows) {\n        Objects.requireNonNull(kind,\"kind\");List<String> input=Rows.copy(rows);\n        if(kind.equals(\"plain\")) {\n            StringBuilder text=new StringBuilder(\"begin\\n\");\n            appendRows(text,input,\"\");\n            text.append(\"end\\n\");return text.toString();\n        }\n        if(kind.equals(\"marked\")) {\n            StringBuilder text=new StringBuilder(\"BEGIN\\n\");\n            appendRows(text,input,\"* \");\n            text.append(\"END\\n\");return text.toString();\n        }\n        throw new IllegalArgumentException(\"kind\");\n    }\n\n    private void appendRows(StringBuilder text,List<String> rows,String prefix) {\n        for(String row:rows)text.append(prefix).append(row).append('\\n');\n    }\n}\n"
+        },
+        "label": "Extract shared row loop before introducing subclass variation",
+        "mode": "baseline"
+      }
+    ]
+  },
+  "16": {
+    "clinic": 16,
+    "pack": "Clinic16-Absence-Packs",
+    "common": [
+      "CompatibilityClient.java",
+      "ContractChecks.java",
+      "Main.java",
+      "src/api/Greetings.java",
+      "src/api/Profile.java",
+      "src/check/Checks.java",
+      "src/legacy/LegacyGreetings.java"
+    ],
+    "roleFiles": {
+      "starter": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/Greetings.java",
+        "src/api/Profile.java",
+        "src/app/GreetingService.java",
+        "src/check/Checks.java",
+        "src/extension/StrictGreeting.java",
+        "src/legacy/LegacyGreetings.java",
+        "src/transfer/ProfileLookup.java"
+      ],
+      "solution": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/Greetings.java",
+        "src/api/Profile.java",
+        "src/app/GreetingService.java",
+        "src/app/GuestRecipient.java",
+        "src/app/KnownRecipient.java",
+        "src/app/Recipient.java",
+        "src/check/Checks.java",
+        "src/extension/StrictGreeting.java",
+        "src/legacy/LegacyGreetings.java",
+        "src/transfer/ProfileLookup.java"
+      ]
+    },
+    "title": "Make absence policy explicit without hiding invalid data",
+    "coreUnfinished": null,
+    "unfinished": {
+      "transfer": "Complete explicit lookup",
+      "extension": "Complete required profile policy"
+    },
+    "completions": {
+      "core": [
+        "src/app/GreetingService.java",
+        "src/app/Recipient.java",
+        "src/app/GuestRecipient.java",
+        "src/app/KnownRecipient.java"
+      ],
+      "transfer": [
+        "src/transfer/ProfileLookup.java"
+      ],
+      "extension": [
+        "src/extension/StrictGreeting.java"
+      ]
+    },
+    "mainOutputs": {
+      "baseline": "Hello, guest|screen\nHello, Ada|email\n",
+      "core": "Hello, guest|screen\nHello, Ada|email\n",
+      "transfer": "Optional[Profile[name=Ada, channel=email]]\n",
+      "extension": "Hello, Ada\n"
+    },
+    "probe": "import app.GreetingService;\nimport api.*;\npublic final class Probe {\n    private Probe() {}\n    public static void main(String[] args) {\n        Greetings greetings=new GreetingService();\n        if(!greetings.channel(null).equals(\"screen\"))throw new AssertionError(\"absent\");\n        if(!greetings.channel(new Profile(\"guest\",\"email\")).equals(\"email\"))throw new AssertionError(\"present guest\");\n        System.out.println(\"probe passed\");\n    }\n}\n",
+    "controls": [
+      {
+        "name": "absent-channel",
+        "file": "src/app/GuestRecipient.java",
+        "before": "return \"screen\";",
+        "after": "return \"email\";",
+        "mode": "core"
+      },
+      {
+        "name": "present-treated-absent",
+        "file": "src/app/KnownRecipient.java",
+        "before": "return profile.name();",
+        "after": "return \"guest\";",
+        "mode": "core"
+      },
+      {
+        "name": "missing-invented-profile",
+        "file": "src/transfer/ProfileLookup.java",
+        "before": "return Optional.ofNullable(copy.get(key));",
+        "after": "return Optional.of(copy.getOrDefault(key,new Profile(\"guest\",\"screen\")));",
+        "mode": "transfer"
+      },
+      {
+        "name": "strict-silent-default",
+        "file": "src/extension/StrictGreeting.java",
+        "before": "result.orElseThrow(()->new NoSuchElementException(\"profile\"))",
+        "after": "result.orElse(new Profile(\"guest\",\"screen\"))",
+        "mode": "extension"
+      }
+    ],
+    "intermediates": [
+      {
+        "files": {
+          "src/app/GreetingService.java": "package app;\nimport api.*;\npublic final class GreetingService implements Greetings {\n    public GreetingService() {}\n    public String hello(Profile profile) {\n        return \"Hello, \"+label(profile);\n    }\n    public String channel(Profile profile) {\n        if(profile==null)return \"screen\";\n        return profile.channel();\n    }\n\n    private String label(Profile profile){return profile==null?\"guest\":profile.name();}\n}\n"
+        },
+        "label": "Extract one label decision before introducing the special-case recipient",
+        "mode": "baseline"
+      }
+    ]
+  },
+  "17": {
+    "clinic": 17,
+    "pack": "Clinic17-Sequencing-Packs",
+    "common": [
+      "CompatibilityClient.java",
+      "ContractChecks.java",
+      "Main.java",
+      "src/api/BoardAPI.java",
+      "src/api/BoardRows.java",
+      "src/api/BoardStats.java",
+      "src/api/Task.java",
+      "src/check/Checks.java",
+      "src/legacy/LegacyBoard.java"
+    ],
+    "roleFiles": {
+      "starter": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/BoardAPI.java",
+        "src/api/BoardRows.java",
+        "src/api/BoardStats.java",
+        "src/api/Task.java",
+        "src/app/BoardReport.java",
+        "src/check/Checks.java",
+        "src/extension/BoardPreview.java",
+        "src/legacy/LegacyBoard.java",
+        "src/transfer/SnapshotDiff.java"
+      ],
+      "solution": [
+        "CompatibilityClient.java",
+        "ContractChecks.java",
+        "Main.java",
+        "README.md",
+        "REFACTORING.md",
+        "SOURCES.md",
+        "sources.txt",
+        "src/api/BoardAPI.java",
+        "src/api/BoardRows.java",
+        "src/api/BoardStats.java",
+        "src/api/Task.java",
+        "src/app/BoardAnalysis.java",
+        "src/app/BoardReport.java",
+        "src/app/BoardText.java",
+        "src/check/Checks.java",
+        "src/extension/BoardPreview.java",
+        "src/legacy/LegacyBoard.java",
+        "src/transfer/SnapshotDiff.java"
+      ]
+    },
+    "title": "Sequence several safe refactor steps",
+    "coreUnfinished": null,
+    "unfinished": {
+      "transfer": "Complete checkpoint comparison",
+      "extension": "Complete sorted preview"
+    },
+    "completions": {
+      "core": [
+        "src/app/BoardReport.java",
+        "src/app/BoardAnalysis.java",
+        "src/app/BoardText.java"
+      ],
+      "transfer": [
+        "src/transfer/SnapshotDiff.java"
+      ],
+      "extension": [
+        "src/extension/BoardPreview.java"
+      ]
+    },
+    "mainOutputs": {
+      "baseline": "tasks=3\ndone=1\nremaining=15\nopen=read,draw\n",
+      "core": "tasks=3\ndone=1\nremaining=15\nopen=read,draw\n",
+      "transfer": "1\n",
+      "extension": "[code, draw, read]\n"
+    },
+    "probe": "import api.*;\nimport app.BoardReport;\nimport java.util.List;\npublic final class Probe {\n    private Probe() {}\n    public static void main(String[] args) {\n        BoardAPI report=new BoardReport();\n        List<Task> tasks=List.of(new Task(\"z\",5,false),new Task(\"a\",2,true));\n        if(!report.summary(tasks).equals(\"tasks=2\\ndone=1\\nremaining=5\\nopen=z\\n\"))\n            throw new AssertionError(\"unchanged board\");\n        System.out.println(\"probe passed\");\n    }\n}\n",
+    "intermediates": [
+      {
+        "files": {
+          "src/app/BoardReport.java": "package app;\nimport api.*;\nimport java.util.*;\npublic final class BoardReport implements BoardAPI {\n    public BoardReport() {}\n    public String summary(List<Task> tasks) {\n        List<Task> input=BoardRows.copy(tasks);\n        int done=0;\n        for(Task task:input)if(task.done())done++;\n        int remaining=unfinished(input);\n        List<String> titles=new ArrayList<>();\n        for(Task task:input)if(!task.done())titles.add(task.title());\n        return \"tasks=\"+input.size()+\"\\ndone=\"+done+\"\\nremaining=\"+remaining+\"\\nopen=\"\n            +(titles.isEmpty()?\"-\":String.join(\",\",titles))+\"\\n\";\n    }\n    public int remainingMinutes(List<Task> tasks) {\n        List<Task> input=BoardRows.copy(tasks);int remaining=unfinished(input);\n        return remaining;\n    }\n\n    private int unfinished(List<Task> tasks) {\n        int total=0;for(Task task:tasks)if(!task.done())total+=task.minutes();\n        return total;\n    }\n}\n"
+        },
+        "label": "Extract duplicated unfinished-minutes method",
+        "mode": "baseline"
+      },
+      {
+        "files": {
+          "src/app/BoardReport.java": "package app;\nimport api.*;\nimport java.util.List;\npublic final class BoardReport implements BoardAPI {\n    public BoardReport() {}\n    public String summary(List<Task> tasks) {\n        BoardStats stats=new BoardAnalysis(tasks).stats();\n        return \"tasks=\"+stats.tasks()+\"\\ndone=\"+stats.done()+\"\\nremaining=\"+stats.remaining()+\"\\nopen=\"\n            +(stats.openTitles().isEmpty()?\"-\":String.join(\",\",stats.openTitles()))+\"\\n\";\n    }\n    public int remainingMinutes(List<Task> tasks) {return new BoardAnalysis(tasks).stats().remaining();}\n}\n",
+          "src/app/BoardAnalysis.java": "package app;\nimport api.*;\nimport java.util.*;\nfinal class BoardAnalysis {\n    private final List<Task> tasks;\n    BoardAnalysis(List<Task> tasks) {this.tasks=BoardRows.copy(tasks);}\n    BoardStats stats() {\n        int done=0,remaining=0;List<String> titles=new ArrayList<>();\n        for(Task task:tasks) {\n            if(task.done())done++;\n            else {remaining+=task.minutes();titles.add(task.title());}\n        }\n        return new BoardStats(tasks.size(),done,remaining,titles);\n    }\n}\n"
+        },
+        "label": "Extract analysis while report formatting stays in the facade",
+        "mode": "baseline"
+      }
+    ],
+    "controls": [
+      {
+        "name": "completed-flipped",
+        "file": "src/app/BoardAnalysis.java",
+        "before": "if(task.done())done++;",
+        "after": "if(!task.done())done++;",
+        "mode": "core"
+      },
+      {
+        "name": "report-sorts-original",
+        "file": "src/app/BoardText.java",
+        "before": "String.join(\",\",stats.openTitles())",
+        "after": "String.join(\",\",new java.util.TreeSet<>(stats.openTitles()))",
+        "mode": "core"
+      },
+      {
+        "name": "final-checkpoint-only",
+        "file": "src/transfer/SnapshotDiff.java",
+        "before": "for(int n=0;n<limit;n++)",
+        "after": "for(int n=limit-1;n<limit&&n>=0;n++)",
+        "mode": "transfer"
+      },
+      {
+        "name": "reverse-sorted-preview",
+        "file": "src/extension/BoardPreview.java",
+        "before": "Comparator.comparing(Task::title)",
+        "after": "Comparator.comparing(Task::title).reversed()",
+        "mode": "extension"
+      }
+    ]
+  }
+}
