@@ -1,0 +1,10 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/api/PlannerAPI.java
+src/api/Point.java
+src/api/RouteData.java
+src/app/TripPlanner.java
+src/extension/WaypointEdit.java
+src/legacy/LegacyPlanner.java
+src/transfer/LongestLeg.java

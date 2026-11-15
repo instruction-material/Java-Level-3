@@ -1,0 +1,42 @@
+name: Java clinic 11 ownership contracts
+on:
+  push:
+    paths:
+      - "Clinic11-Ownership-Packs/**"
+      - "tools/verify-clinic11-ownership.py"
+      - ".github/workflows/clinic11-ownership-contracts.yml"
+  pull_request:
+    paths:
+      - "Clinic11-Ownership-Packs/**"
+      - "tools/verify-clinic11-ownership.py"
+      - ".github/workflows/clinic11-ownership-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: clinic11-ownership-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CLASSES_FAMILY_TASK_ID: java-clinic11-ownership-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify ownership refactor, intermediate extraction, public clients and independent optional work
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 -I -B tools/verify-clinic11-ownership.py
+      - name: Retain original source and native evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-clinic11-ownership-native-contracts
+          path: |
+            output/java-clinic11-ownership-contracts/
+            Clinic11-Ownership-Packs/
+          if-no-files-found: error
+          retention-days: 14
