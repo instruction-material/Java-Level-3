@@ -1,0 +1,16 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/api/DeskAPI.java
+src/api/JoinStatus.java
+src/api/Rules.java
+src/api/SessionView.java
+src/app/AppScript.java
+src/app/DeskReports.java
+src/app/SessionBook.java
+src/app/WorkshopDesk.java
+src/legacy/LegacyWorkshopDesk.java
+src/preview/RenamePreview.java
+src/trace/Equivalence.java
+src/trace/Observation.java
+src/trace/Step.java

@@ -1,0 +1,7 @@
+open room 1
+join room ana
+join room bo
+leave room ana
+report compact
+close room
+join room cy
