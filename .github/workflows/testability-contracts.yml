@@ -1,0 +1,42 @@
+name: Java testability contracts
+on:
+  push:
+    paths:
+      - "DPR9-Testability-Packs/**"
+      - "tools/verify-testability.py"
+      - ".github/workflows/testability-contracts.yml"
+  pull_request:
+    paths:
+      - "DPR9-Testability-Packs/**"
+      - "tools/verify-testability.py"
+      - ".github/workflows/testability-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: testability-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CLASSES_FAMILY_TASK_ID: java-testability-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile before/after roles and verify default behavior, deterministic seams and independent projects
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 -I -B tools/verify-testability.py
+      - name: Retain original source and native evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-testability-native-contracts
+          path: |
+            output/java-testability-contracts/
+            DPR9-Testability-Packs/
+          if-no-files-found: error
+          retention-days: 14

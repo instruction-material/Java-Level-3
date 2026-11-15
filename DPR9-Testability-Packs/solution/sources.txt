@@ -1,0 +1,10 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/journal/CaptureNormalizer.java
+src/journal/DispatchJournal.java
+src/journal/Entry.java
+src/journal/EntrySink.java
+src/journal/JournalAPI.java
+src/journal/LegacyJournal.java
+src/journal/RetryingSink.java
