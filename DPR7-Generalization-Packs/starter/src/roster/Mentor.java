@@ -3,6 +3,7 @@ import java.util.Objects;
 
 /** Only the mentoring-slot responsibility belongs in this subtype. */
 public final class Mentor {
+    private final RoleFormatter formatter = new MentorFormatter();
     private final String name;
     private final int sessions;
     private final int mentoringSlots;
@@ -18,5 +19,5 @@ public final class Mentor {
     public String name() { return name; }
     public int sessions() { return sessions; }
     public int credits() { return sessions * 2 + mentoringSlots * 3; }
-    public String line() { return name + " | mentor | " + credits(); }
+    public String line() { return formatter.format(name, credits()); }
 }

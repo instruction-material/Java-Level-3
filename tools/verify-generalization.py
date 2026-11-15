@@ -154,6 +154,9 @@ def verify():
         for name in files:
             destination=folder/name;destination.parent.mkdir(parents=True,exist_ok=True)
             shutil.copy2(PACK/"solution"/name,destination)
+        if mode=="core":
+            for old in ["RoleFormatter.java","VolunteerFormatter.java","MentorFormatter.java"]:
+                (folder/"src/roster"/old).unlink()
         update_sources(folder)
         success(compile_role(folder))
         count=summary(execute(folder,"ContractChecks",mode),mode)
@@ -191,6 +194,14 @@ public final class PublicClients {
     (before/"IndexedClient.java").write_text(probe)
     success(run([JAVAC,"--release","21","-cp","classes","-d","classes","IndexedClient.java"],before))
     proof["clients"].append("The same unwanted indexed operation compiles against the original starter")
+    sealed=copy_role("solution","sealed-comparison")
+    mutate(sealed,"src/roster/Member.java","public abstract class Member implements LineSource {","public abstract sealed class Member implements LineSource permits Volunteer, Mentor {")
+    success(compile_role(sealed))
+    summary(execute(sealed,"ContractChecks","core"),"core")
+    third='package roster; public final class GuestMember extends Member { public GuestMember() { super("Guest",0); } protected String role() { return "guest"; } public int credits() { return sessionCredits(); } }'
+    (sealed/"src/roster/GuestMember.java").write_text(third)
+    rejected(run([JAVAC,"--release","21","-cp","classes","-d","classes","src/roster/GuestMember.java"],sealed),"not allowed to extend sealed class")
+    proof["clients"].append("Sealed Member retains runtime contracts and rejects a third direct subtype")
     controls = [
         ("mentor-credits","src/roster/Mentor.java","sessionCredits() + mentoringSlots * 3","sessionCredits() + mentoringSlots * 2","core","expected="),
         ("constructor-order","src/roster/Member.java",'Objects.requireNonNull(name, "name");','if (sessions < 0) throw new IllegalArgumentException("sessions");\n        Objects.requireNonNull(name, "name");',"core","Expected NullPointerException"),

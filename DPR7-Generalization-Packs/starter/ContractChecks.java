@@ -86,6 +86,10 @@ public final class ContractChecks {
             equal(member, subtype.getMethod("line").getDeclaringClass());
         }
         member.getDeclaredMethod("sessionCredits");
+        for (String old : List.of("roster.RoleFormatter", "roster.VolunteerFormatter", "roster.MentorFormatter")) {
+            try { Class.forName(old); throw new AssertionError("Remove parallel formatter: " + old); }
+            catch (ClassNotFoundException removed) { checks++; }
+        }
     }
     @FunctionalInterface private interface Render {
         String apply(Format format, List<Row> rows);

@@ -7,7 +7,15 @@ import java.util.Objects;
 public final class LegacyRoster implements RosterAPI {
     private final List<String> lines = new ArrayList<>();
     private long total;
+    private abstract static class Formatter { abstract String format(String name, int credits); }
+    private static final class VolunteerFormatter extends Formatter {
+        String format(String name, int credits) { return name + " | volunteer | " + credits; }
+    }
+    private static final class MentorFormatter extends Formatter {
+        String format(String name, int credits) { return name + " | mentor | " + credits; }
+    }
     private static final class Volunteer {
+        private final Formatter formatter = new VolunteerFormatter();
         private final String name;
         private final int sessions;
         Volunteer(String name, int sessions) {
@@ -18,9 +26,10 @@ public final class LegacyRoster implements RosterAPI {
             this.sessions = sessions;
         }
         int credits() { return sessions * 2; }
-        String line() { return name + " | volunteer | " + credits(); }
+        String line() { return formatter.format(name, credits()); }
     }
     private static final class Mentor {
+        private final Formatter formatter = new MentorFormatter();
         private final String name;
         private final int sessions;
         private final int mentoringSlots;
@@ -34,7 +43,7 @@ public final class LegacyRoster implements RosterAPI {
             this.mentoringSlots = mentoringSlots;
         }
         int credits() { return sessions * 2 + mentoringSlots * 3; }
-        String line() { return name + " | mentor | " + credits(); }
+        String line() { return formatter.format(name, credits()); }
     }
     public void addVolunteer(String name, int sessions) {
         Volunteer member = new Volunteer(name, sessions);

@@ -20,9 +20,9 @@ Keep the frozen Legacy classes, CompatibilityClient.java, ContractChecks.java, s
 
 ## Required project: one shared roster model
 
-Edit src/roster/Roster.java, Volunteer.java, Mentor.java and SponsorBanner.java. Create src/roster/Member.java and LineSource.java and list them in sources.txt.
+Edit src/roster/Roster.java, Volunteer.java, Mentor.java and SponsorBanner.java. Create src/roster/Member.java and LineSource.java and list them in sources.txt. Remove RoleFormatter.java, VolunteerFormatter.java and MentorFormatter.java and their source-list entries after moving the shared line layout into Member.
 
-A volunteer and a mentor share an exact name and session count. Their constructors currently repeat data, validation and formatting responsibilities. A sponsor banner can supply a display line but has no membership, sessions or credits.
+A volunteer and a mentor share an exact name and session count. Their constructors currently repeat data and validation. Volunteer and Mentor also each require a matching formatter subtype. This parallel family makes adding a role require changes in two class trees. The shared Member.line layout and role hook remove that unnecessary formatter family. A sponsor banner can supply a display line but has no membership, sessions or credits.
 
 The input and result contract is:
 
@@ -55,6 +55,18 @@ Extract the LineSource interface with String line(). Member and SponsorBanner im
 This prints the volunteer line followed by the support line.
 
 Five techniques are exercised here. Extract Superclass creates Member from the common member data and behavior. Pull Up Field moves name and sessions to that owner. Pull Up Constructor Body gives their ordered validation and initialization one home. Pull Up Method centralizes the common getters, session calculation and line layout after variation has an explicit hook. Extract Interface captures only the common display capability shared by otherwise unrelated objects.
+
+### Substitutability, sealed types and independent variation
+
+A Member has valid shared name/session data and supplies a role-specific nonnegative total and display line. Run the supplied contract cases for both Volunteer and Mentor. A subtype that rejects a valid shared session count, changes the first reported input error or mutates earlier observations breaks that common meaning. Member stores its fields privately and exposes a protected final sessionCredits calculation, avoiding writable protected state that a subtype could use to bypass validation.
+
+A sealed hierarchy controls which direct subtypes exist. If the roster domain is intentionally closed to these two roles, the Member declaration can be:
+
+    public abstract sealed class Member implements LineSource permits Volunteer, Mentor {
+
+The supplied Volunteer and Mentor are final and in the same package, so they satisfy that declaration. A third direct subtype then fails compilation. Sealing does not prove its permitted subtypes honor input, result or state contracts; the same runtime checks still apply. The reference leaves Member open for future legitimate member types, and keeps LineSource as the separate display capability for unrelated objects.
+
+Template Method controls a shared algorithm and its hooks. Sealing controls permitted types. Delegation controls ownership of a collaborator. These address different forces. If both membership role and output format varied independently, adding CsvVolunteer and CsvMentor would create another parallel family. Keep the formatting choice in a separate collaborator instead. The current roster promises one line format, so removing the existing duplicate formatter family is sufficient.
 
 Run Main core and ContractChecks core after the refactor. Repeat the checks with -da. Core completion includes the identical worked output, all valid input combinations, ordered validation, immutable earlier snapshots and the actual extracted superclass/interface relationships.
 

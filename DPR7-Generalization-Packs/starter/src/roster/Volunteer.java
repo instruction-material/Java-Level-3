@@ -3,6 +3,7 @@ import java.util.Objects;
 
 /** Refactor the shared fields, constructor work and methods into Member. */
 public final class Volunteer {
+    private final RoleFormatter formatter = new VolunteerFormatter();
     private final String name;
     private final int sessions;
     public Volunteer(String name, int sessions) {
@@ -15,5 +16,5 @@ public final class Volunteer {
     public String name() { return name; }
     public int sessions() { return sessions; }
     public int credits() { return sessions * 2; }
-    public String line() { return name + " | volunteer | " + credits(); }
+    public String line() { return formatter.format(name, credits()); }
 }

@@ -15,7 +15,10 @@ src/reports/Row.java
 src/roster/CompatibilityClient.java
 src/roster/LegacyRoster.java
 src/roster/Mentor.java
+src/roster/MentorFormatter.java
+src/roster/RoleFormatter.java
 src/roster/Roster.java
 src/roster/RosterAPI.java
 src/roster/SponsorBanner.java
 src/roster/Volunteer.java
+src/roster/VolunteerFormatter.java

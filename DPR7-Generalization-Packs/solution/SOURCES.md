@@ -8,3 +8,6 @@ https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html
 https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Math.html#addExact(long,long)
 
 The preserved scope is the stated domain API and supplied source clients. Legacy class hierarchy, reflection and serialized object shape are not retained contracts.
+
+Java 21 sealed-class declaration and permitted-subclass rules:
+https://docs.oracle.com/en/java/javase/21/language/sealed-classes-and-interfaces.html
