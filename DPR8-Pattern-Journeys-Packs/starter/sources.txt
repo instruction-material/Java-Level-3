@@ -1,0 +1,16 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/editor/AncientDay.java
+src/editor/Editor.java
+src/editor/EditorAPI.java
+src/editor/LegacyEditor.java
+src/notices/LegacyNotices.java
+src/notices/Notice.java
+src/notices/NoticeAPI.java
+src/notices/NoticeService.java
+src/tickets/GuardTicket.java
+src/tickets/LegacyTicket.java
+src/tickets/StrategyTicket.java
+src/tickets/Ticket.java
+src/tickets/TicketAPI.java

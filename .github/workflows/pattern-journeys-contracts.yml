@@ -1,0 +1,42 @@
+name: Java pattern journey contracts
+on:
+  push:
+    paths:
+      - "DPR8-Pattern-Journeys-Packs/**"
+      - "tools/verify-pattern-journeys.py"
+      - ".github/workflows/pattern-journeys-contracts.yml"
+  pull_request:
+    paths:
+      - "DPR8-Pattern-Journeys-Packs/**"
+      - "tools/verify-pattern-journeys.py"
+      - ".github/workflows/pattern-journeys-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pattern-journeys-contracts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CLASSES_FAMILY_TASK_ID: java-pattern-journeys-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile before/after roles and verify pattern responsibilities, behavior and independent projects
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          python3 -I -B tools/verify-pattern-journeys.py
+      - name: Retain original source and native evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: java-pattern-journeys-native-contracts
+          path: |
+            output/java-pattern-journeys-contracts/
+            DPR8-Pattern-Journeys-Packs/
+          if-no-files-found: error
+          retention-days: 14
