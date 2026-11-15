@@ -165,3 +165,7 @@ Canonical source repository: `Java-Level-3`
 ## Prepared Capstone Integration
 
 `DPJ10-Dispatch-Refactor-Packs` supplies the runnable Dispatch Desk starter and separate reference for Design Patterns in Java's DPJ10 Capstone Refactor. The starter preserves a complete cluttered application and baseline. The reference adds independently replaceable rendering/storage collaborators, with a computation-only intermediate verified as a separate checkpoint. Shared oracle contracts cover all 240 bounded dispatch inputs, state/effect failures and snapshots; the optional batch stays independent of core. Use `tools/verify-capstone.py` under Java 21. Matching catalog lessons, pinned role imports and actual exported-workspace acceptance are tracked separately and remain pending.
+
+## DPR7 generalization projects
+
+DPR7-Generalization-Packs contains starter and reference roles for the required roster hierarchy, optional report template and optional event/counter relationship projects. The starter preserves working before designs; full acceptance also requires the stated extracted types and relationships. Native checks are in tools/verify-generalization.py and .github/workflows/generalization-contracts.yml. Matching catalog/IDE integration remains a separate gate before the course increment is accepted.
