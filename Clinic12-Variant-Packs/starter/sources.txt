@@ -1,0 +1,11 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/api/Messages.java
+src/api/RenderRule.java
+src/api/Rules.java
+src/app/MessageService.java
+src/check/Checks.java
+src/extension/PrefixRule.java
+src/legacy/LegacyMessages.java
+src/transfer/RenderBatch.java

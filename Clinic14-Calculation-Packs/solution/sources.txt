@@ -1,0 +1,12 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/api/BatchTotal.java
+src/api/EnergyAPI.java
+src/api/EnergyResult.java
+src/api/EnergyRules.java
+src/app/EnergyMeter.java
+src/check/Checks.java
+src/extension/EnergyBatch.java
+src/legacy/LegacyEnergy.java
+src/transfer/EnergyLoss.java

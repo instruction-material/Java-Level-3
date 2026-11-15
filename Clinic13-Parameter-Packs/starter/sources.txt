@@ -1,0 +1,11 @@
+CompatibilityClient.java
+ContractChecks.java
+Main.java
+src/api/RangeRules.java
+src/api/Ranges.java
+src/app/RangeService.java
+src/app/RangeSpec.java
+src/check/Checks.java
+src/extension/MergeRanges.java
+src/legacy/LegacyRanges.java
+src/transfer/EveryOther.java
