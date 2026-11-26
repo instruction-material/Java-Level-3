@@ -27,29 +27,23 @@ class Main {
     public static ArrayList<Integer> merge(ArrayList<Integer> a,
                                            ArrayList<Integer> b) {
 
-        //compare the first elements of the two lists,
-        //move the smaller of the two to the "result" list
-        //repeat until one of the lists is empty
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        while (a.size() != 0 && b.size() != 0) {
-            if (a.get(0) < b.get(0)) {
-                result.add(a.get(0));
-                a.remove(0);
+        // Move a cursor past each copied value and keep both input lists intact.
+        ArrayList<Integer> result = new ArrayList<>(a.size() + b.size());
+        int left = 0;
+        int right = 0;
+        while (left < a.size() && right < b.size()) {
+            Integer fromLeft = a.get(left);
+            Integer fromRight = b.get(right);
+            if (fromLeft <= fromRight) {
+                result.add(fromLeft);
+                left++;
             } else {
-                result.add(b.get(0));
-                b.remove(0);
+                result.add(fromRight);
+                right++;
             }
         }
-
-        //one list will run out of elements before the other,
-        //so add the rest of the remaining elements
-        if (a.size() == 0) {
-            result.addAll(b);
-        }
-        if (b.size() == 0) {
-            result.addAll(a);
-        }
-
+        result.addAll(a.subList(left, a.size()));
+        result.addAll(b.subList(right, b.size()));
         return result;
     }
 }
