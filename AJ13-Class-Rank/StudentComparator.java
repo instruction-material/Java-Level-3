@@ -1,12 +1,9 @@
-import java.util.*;
+import java.util.Comparator;
 
 public class StudentComparator implements Comparator<Student> {
+    @Override
     public int compare(Student first, Student second) {
-        if (first.getGPA() < second.getGPA()) {
-            return 1;
-        } else if (first.getGPA() > second.getGPA()) {
-            return -1;
-        }
-        return 0;
+        int byGpa = Double.compare(second.getGPA(), first.getGPA());
+        return byGpa != 0 ? byGpa : first.getName().compareTo(second.getName());
     }
 }

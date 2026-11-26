@@ -1,42 +1,38 @@
-import java.util.*;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
 
 class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("\nType in a sentence: ");
-        String sentence = scanner.nextLine();
+        try (var scanner = new Scanner(System.in)) {
+            System.out.print("\nType in a sentence: ");
+            String sentence = scanner.hasNextLine() ? scanner.nextLine() : "";
+            Map<Integer, Integer> frequencies = new TreeMap<>();
+            sentence.codePoints()
+                    .filter(Character::isLetter)
+                    .map(Character::toLowerCase)
+                    .forEach(letter -> frequencies.merge(letter, 1, Integer::sum));
 
-        Map<Character, Integer> frequencies = new TreeMap<>();
+            if (frequencies.isEmpty()) {
+                System.out.println("\nNo letters found.");
+                return;
+            }
 
-        // fill the map
-        for (int i = 0; i < sentence.length(); i++) {
-            char letter = sentence.charAt(i);
-            letter = Character.toLowerCase(letter);
-            if (letter != ' ') {
-                int frequency = 1;
-                if (frequencies.containsKey(letter)) {
-                    frequency += frequencies.get(letter);
+            System.out.println("\nLetters: ");
+            int mostFrequent = -1;
+            int highestCount = 0;
+            for (var entry : frequencies.entrySet()) {
+                int letter = entry.getKey();
+                int count = entry.getValue();
+                System.out.printf("%s: %d%n", Character.toString(letter), count);
+                if (count > highestCount) {
+                    mostFrequent = letter;
+                    highestCount = count;
                 }
-                frequencies.put(letter, frequency);
             }
+            System.out.printf(
+                    "%nThe most frequent letter is: %s%nWhich appears a whopping %d times!%n",
+                    Character.toString(mostFrequent), highestCount);
         }
-
-        // print all the letters
-        System.out.println("\nLetters: ");
-        for (char letter : frequencies.keySet()) {
-            System.out.print(letter + ": ");
-            System.out.print(frequencies.get(letter) + "\n");
-        }
-
-        // find the maximum letter
-        char maximumLetter = frequencies.keySet().iterator().next();
-        for (char letter : frequencies.keySet()) {
-            if (frequencies.get(letter) > frequencies.get(maximumLetter)) {
-                maximumLetter = letter;
-            }
-        }
-        System.out.print("\nThe most frequent letter is: " + maximumLetter +
-                         "\nWhich appears a whopping " +
-                         frequencies.get(maximumLetter) + " times!");
     }
 }
