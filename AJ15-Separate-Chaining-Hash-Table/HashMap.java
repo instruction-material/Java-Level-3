@@ -1,167 +1,100 @@
-//TODO solve it recursively!!!!
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 public class HashMap<K, V> {
-
-    private int numNodes;
-    private int tableSize;
-    private Node[] hashTable;
-    private static final int[] PRIMES = {
-        2,         3,        5,         7,         11,        13,
-        17,        19,       23,        29,        31,        37,
-        41,        43,       47,        53,        97,        193,
-        389,       769,      1543,      3079,      6151,      12289,
-        24593,     49157,    98317,     139291,    196613,    259537,
-        299993,    350213,   393241,    444863,    499979,    550279,
-        599999,    652153,   700001,    786433,    851359,    900001,
-        950473,    999983,   1572869,   3145739,   6291469,   12582917,
-        25165843,  50331653, 100663319, 201326611, 402653189, 805306457,
-        1610612741};
-
-    private class Node<K, V> {
-        private K key;
+    private static final class Entry<K, V> {
+        private final K key;
         private V value;
-        private Node next;
 
-        public Node(K key, V value) {
+        Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }
     }
 
-    public HashMap() {
-        numNodes = 0;
-        tableSize = 47;
-        hashTable = new Node[tableSize];
-    }
+    private List<LinkedList<Entry<K, V>>> buckets = emptyBuckets(47);
+    private int size;
 
-    private int hash(K key) {
-        return Math.abs(key.hashCode() % tableSize);
-    }
-    private Node getNode(int index) {
-        return (Node)hashTable[index];
-    }
-
-    public void insert(K key, V value) {
-        int index = hash(key);
-        System.out.println(index);
-        Node current = hashTable[index];
-        while (current != null) {
-            if (current.key.equals(key)) {
-                //ERROR! duplicate key!
-                return;
-            }
-            current = current.next;
+    private List<LinkedList<Entry<K, V>>> emptyBuckets(int capacity) {
+        var result = new ArrayList<LinkedList<Entry<K, V>>>(capacity);
+        for (int index = 0; index < capacity; index++) {
+            result.add(new LinkedList<>());
         }
-        current = new Node(key, value);
-        //System.out.println(current.key + " " + current.value);
+        return result;
     }
 
-    public V get(K key) {
-        int index = hash(key);
-        Node current = getNode(index);
-        while (current != null) {
-            System.out.println("TEST");
-            if (current.key.equals(key)) {
-                return (V)current.value;
-            }
-            current = current.next;
+    private int index(K key, int capacity) {
+        return Math.floorMod(key.hashCode(), capacity);
+    }
+
+    private LinkedList<Entry<K, V>> bucket(K key) {
+        return buckets.get(index(key, buckets.size()));
+    }
+
+    private Entry<K, V> find(K key) {
+        for (Entry<K, V> entry : bucket(key)) {
+            if (entry.key.equals(key)) return entry;
         }
         return null;
     }
 
-    public void remove(K key) {
-        int index = hash(key);
-        Node previous = null;
-        Node current = getNode(index);
+    private void addNew(K key, V value) {
+        bucket(key).add(new Entry<>(key, value));
+        size++;
+        if (size > buckets.size() / 2) resize();
+    }
 
-        while (current != null) {
-            if (current.key.equals(key)) {
-                //found what we need to delete
-                //set the previous node's next node...
-                //...to the current node's next node
-                previous.next = current.next;
-                current = null;
+    // Keep the original value when the key is already present.
+    public void insert(K key, V value) {
+        if (!has(key)) addNew(key, value);
+    }
+
+    // Update the value when the key is already present.
+    public void put(K key, V value) {
+        Entry<K, V> existing = find(key);
+        if (existing == null) addNew(key, value);
+        else existing.value = value;
+    }
+
+    public V get(K key) {
+        Entry<K, V> entry = find(key);
+        return entry == null ? null : entry.value;
+    }
+
+    public boolean has(K key) {
+        return find(key) != null;
+    }
+
+    public void remove(K key) {
+        var scan = bucket(key).iterator();
+        while (scan.hasNext()) {
+            if (scan.next().key.equals(key)) {
+                scan.remove();
+                size--;
                 return;
             }
-            previous = current;
-            current = current.next;
-        }
-
-        //key doesn't exist
-        return;
-    }
-
-    public void put(K key, V value) {
-        int index = hash(key);
-        Node current = getNode(index);
-        if (current == null) {
-            hashTable[index] = new Node(key, value);
-        } else {
-            while (current.next != null) {
-                current = current.next;
-            }
-            current.next = new Node(key, value);
         }
     }
-    public boolean has(K key) {
-        int index = hash(key);
-        Node current = getNode(index);
-        while (current != null) {
-            if (current.key.equals(key)) {
-                return true;
-            }
-            current = current.next;
-        }
-        return false;
-    }
-    private void rehash() {
-        System.out.println("REHASH!!");
-        int oldtableSize = this.tableSize;
-        this.tableSize *= 2;
 
-        int i = 0;
-        while (this.tableSize > this.PRIMES[i]) {
-            i++;
-        }
-        this.tableSize = this.PRIMES[i];
-        System.out.println(tableSize);
-
-        //Create a new array with the bigger size
-        Node[] bigger = new Node[this.tableSize];
-
-        //For each element in the old array
-        for (int j = 0; j < oldtableSize; j++) {
-
-            Node node = getNode(j);
-
-            //If the node exists insert the entire linked list
-            //...into the bigger table
-            if (node != null) {
-                rehashInsert(node, bigger);
+    private void resize() {
+        var grown = emptyBuckets(Math.addExact(Math.multiplyExact(buckets.size(), 2), 1));
+        for (var chain : buckets) {
+            for (var entry : chain) {
+                grown.get(index(entry.key, grown.size())).add(entry);
             }
         }
-        this.hashTable = bigger; // Overwrite the hash table
-    }
-
-    private void rehashInsert(Node node, Node[] bigger) {
-        int hashCode = hash((K)node.key);
-        Node current = (Node)bigger[hashCode];
-        while (current != null) {
-            current = current.next;
-        }
-        current = node;
+        buckets = grown;
     }
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < hashTable.length; i++) {
-            Node current = getNode(i);
-            while (current != null) {
-                current = current.next;
-                stringBuilder.append("\n" + current.key + ": ");
-                stringBuilder.append(current.value);
+        var text = new StringBuilder();
+        for (var chain : buckets) {
+            for (var entry : chain) {
+                text.append(entry.key).append(": ").append(entry.value).append('\n');
             }
         }
-        return stringBuilder.toString();
+        return text.toString();
     }
 }

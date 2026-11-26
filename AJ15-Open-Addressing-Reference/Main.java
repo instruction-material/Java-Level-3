@@ -28,72 +28,37 @@ class Main {
         System.out.println();
     }
 
-    // Linear probing method that returns the index of the element to be inserted
-    public static void linearProbingInsert(int[] a, int num) {
-        int hashCode = 0;
-        int j = num;
-
-        while (j >= 10) {
-            hashCode += j % 10;
-            j = j / 10;
-        }
-        hashCode += j;
-
-        hashCode %= a.length;
-
-        //First make sure there are open slots in the array
-        boolean isFull = true;
-        for (int n : a) {
-            if (n == 0) {
-                isFull = false;
-            }
-        }
-
-        int i = 1;
-        int index = hashCode;
-        if (!isFull) {
-            while (true) {
-                if (a[index] == 0) {
-                    a[index] = num;
-                    break;
-                }
-                index = (hashCode + i) % a.length;
-                i += 1;
-            }
-        }
+    /** Return whether the next linear probe sequence has a slot for this nonzero key. */
+    public static boolean linearProbingInsert(int[] table, int key) {
+        return insert(table, key, false);
     }
 
-    public static void quadraticProbingInsert(int[] a, int num) {
-        int hashCode = 0;
-        int j = num;
+    /** Quadratic probing can fail to reach an empty slot in part of the table. */
+    public static boolean quadraticProbingInsert(int[] table, int key) {
+        return insert(table, key, true);
+    }
 
-        while (j >= 10) {
-            hashCode += j % 10;
-            j = j / 10;
-        }
-        hashCode += j;
-
-        hashCode %= a.length;
-
-        //First make sure there are open slots in the array
-        boolean isFull = true;
-        for (int n : a) {
-            if (n == 0) {
-                isFull = false;
+    private static boolean insert(int[] table, int key, boolean quadratic) {
+        if (table.length == 0 || key == 0) return false;
+        int home = digitSum(key) % table.length;
+        for (int step = 0; step < table.length; step++) {
+            long offset = quadratic ? (long) step * step : step;
+            int index = (int) ((home + offset) % table.length);
+            if (table[index] == 0) {
+                table[index] = key;
+                return true;
             }
         }
+        return false;
+    }
 
-        int i = 1;
-        int index = hashCode;
-        if (!isFull) {
-            while (true) {
-                if (a[index] == 0) {
-                    a[index] = num;
-                    break;
-                }
-                index = (hashCode + i * i) % a.length;
-                i += 1;
-            }
+    private static int digitSum(int key) {
+        long digits = Math.abs((long) key);
+        int sum = 0;
+        while (digits > 0) {
+            sum += (int) (digits % 10);
+            digits /= 10;
         }
+        return sum;
     }
 }

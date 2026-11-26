@@ -1,45 +1,33 @@
 public class Main {
-    public static void main(String args[]) {
+    public static void main(String[] args) {
+        // Run this deliberate error separately to see its stack trace.
+        if (args.length == 1 && args[0].equals("runtime-error")) {
+            runtimeException();
+            return;
+        }
 
-        //RUNTIME EXCEPTIONS:
-        //A runtime exception is caused by a bug. Most of the time we should fix the bug rather than handle it with a try-catch block
-        runtimeException();
-
-        //CHECKED EXCEPTIONS: ------------------------------------------
-        //caused by something outside the programmers control (usually when you're working with external resources (file streams, internet, user-input, etc.)
-
-        //1. HANDLE IMMEDIATELY:
-        //Notice how the exception is handled in the method
         handleImmediately();
-
-        //2. DECLARE AND HANDLE LATER:
-        //Notice how the exception is declared instead of handled in the method, so now we have to handle it here.
         try {
             handleLater();
-        } catch (CustomException ex) {
-            System.out.println(ex.getMessage());
+        } catch (CustomException error) {
+            System.out.println(error.getMessage());
         }
     }
 
-    //CHECKED EXCEPTIONS ---------------------------------------------
     private static void handleImmediately() {
         try {
-            //there's no good reason why we threw this exception, we just did it to show the difference between handling immediately vs declaring and handling elsewhere
-            throw new CustomException(
-                "ERROR: something went wrong in handleImmediately()");
-        } catch (CustomException ex) {
-            System.out.println(ex.getMessage());
+            throw new CustomException("Caught in handleImmediately()");
+        } catch (CustomException error) {
+            System.out.println(error.getMessage());
         }
     }
+
     private static void handleLater() throws CustomException {
-        throw new CustomException(
-            "ERROR: something went wrong in handleLater()");
+        throw new CustomException("Caught by the caller of handleLater()");
     }
 
-    //RUNTIME EXCEPTION ----------------------------------------------
     private static void runtimeException() {
-        int[] array = new int[0];
-        //fix this line of code rather than handle with try-catch
-        array[-1] = 0;
+        int[] values = new int[0];
+        values[-1] = 0;
     }
 }
