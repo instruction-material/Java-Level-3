@@ -9,7 +9,7 @@ public class Main {
     static List<String> readWords(Path path) throws IOException {
         String contents = Files.readString(path).strip();
         if (contents.isEmpty()) return new ArrayList<>();
-        return new ArrayList<>(Arrays.asList(contents.split("\\s+")));
+        return new ArrayList<>(Arrays.asList(contents.split("\\p{javaWhitespace}+")));
     }
 
     static void sort(List<String> words) {

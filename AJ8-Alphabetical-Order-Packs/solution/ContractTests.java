@@ -25,6 +25,13 @@ public class ContractTests {
             expected.sort(String::compareTo);
             Main.sort(loaded);
             expect(expected, loaded);
+            var sampleFile = java.nio.file.Files.createTempFile("java-words-", ".txt");
+            try {
+                java.nio.file.Files.writeString(sampleFile, "apricot pear\tmelon");
+                expect(List.of("apricot", "pear", "melon"), Main.readWords(sampleFile));
+            } finally {
+                java.nio.file.Files.delete(sampleFile);
+            }
         } catch (java.io.IOException error) {
             throw new AssertionError("Expected the bundled word list", error);
         }
