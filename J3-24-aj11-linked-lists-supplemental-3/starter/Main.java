@@ -1,15 +1,23 @@
-import java.util.List;
-
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
+    static final class Node {
+        final int data;
+        Node next;
+
+        Node(int data, Node next) {
+            this.data = data;
+            this.next = next;
         }
-        return total;
+    }
+
+    static Node reverse(Node head) {
+        // TODO: Redirect the links one at a time.
+        throw new UnsupportedOperationException("Redirect the links one at a time");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        Node head = new Node(1, new Node(2, new Node(3, null)));
+        for (Node node = reverse(head); node != null; node = node.next) {
+            System.out.println(node.data);
+        }
     }
 }

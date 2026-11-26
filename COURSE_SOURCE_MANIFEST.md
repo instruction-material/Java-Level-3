@@ -49,9 +49,11 @@ Canonical source repository: `Java-Level-3`
 | `AJ10-Nested-Classes` |
 | `AJ10-Node-Class` |
 | `AJ11-Doubly-Linked-List` |
+| `AJ11-Doubly-Linked-List-Packs` |
 | `AJ11-Doubly-Linked-List-Starter` |
 | `AJ11-Linked-List` |
 | `AJ11-Linked-List-Starter` |
+| `AJ11-Singly-Linked-List-Packs` |
 | `AJ12-Calculator-with-Stacks` |
 | `AJ12-Deque` |
 | `AJ12-Deque-Starter` |
