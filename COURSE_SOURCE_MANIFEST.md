@@ -68,7 +68,9 @@ Canonical source repository: `Java-Level-3`
 | `AJ12-Valid-Parentheses` |
 | `AJ12-Valid-Parentheses-Packs` |
 | `AJ13-Class-Rank` |
+| `AJ13-Class-Rank-Packs` |
 | `AJ13-Letter-Frequencies` |
+| `AJ13-Letter-Frequencies-Packs` |
 | `AJ13-Maps` |
 | `AJ14-Basic-BST` |
 | `AJ14-BST` |

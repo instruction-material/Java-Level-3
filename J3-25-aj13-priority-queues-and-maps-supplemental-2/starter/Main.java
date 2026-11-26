@@ -1,15 +1,19 @@
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    record Job(String label, int urgency, long arrival) {}
+
+    static List<String> schedule(List<Job> jobs) {
+        // TODO: Schedule urgent jobs first and keep arrival order on ties.
+        throw new UnsupportedOperationException("Schedule urgent jobs first and keep arrival order on ties");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        var jobs = List.of(new Job("Printer", 2, 1), new Job("Terminal", 4, 2),
+                new Job("Router", 4, 3), new Job("Monitor", 1, 4));
+        System.out.println(schedule(jobs));
     }
 }
