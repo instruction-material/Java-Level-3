@@ -17,10 +17,11 @@ class Main {
     -Degree: The number of children (always 2 or less in a BST)
     -Root: The top node, with no ancestors
     -Leaf: Bottom node with no children
-    -Height: The number of edges from the root to a leaf
+    -Height: The largest number of edges from the root to a leaf
     -Subtree: A tree within a tree, where one of the nodes is the new root
 
-    //BST-3: Describe the process of depth-first search. Then write out the pre-order, in-order, and post-order traversals for the following tree:
+    // BST-3: A is the root, with children B and E. B has children C and D. E has children F and G.
+    // Trace pre-order, in-order, and post-order traversals.
 
     // ANSWER:
     // Pre-Order: A,B,C,D,E,F,G
@@ -36,9 +37,10 @@ class Main {
         /*
     HashTables-3: What is a load factor? Calculate the load factors for the following tables:
 
-    1543 slots, 695 nodes = 0.45
-    700,001 slots 420,000 nodes = 0.59 Rehash
-    193 slots, 98 nodes = 0.507 Rehash
+    Divide the number of entries by the capacity. Rehash when the load factor exceeds 0.5.
+    695 / 1,543 is approximately 0.450.
+    420,000 / 700,001 is approximately 0.600. Rehash.
+    98 / 193 is approximately 0.508. Rehash.
 
     */
 
@@ -50,16 +52,16 @@ class Main {
     Graph-2: Define the following terms:
     -Vertex: Node in a graph
     -Edge: Connects vertices
-    -Circuit: A cycle, a cpath that begins and ends in the same place
-    -Directed: Directions on the edges (cant go both ways)
-    -Undirected: No directions on the edges and can traverse form either direction
+    -Circuit: A walk that returns to its starting vertex without reusing an edge
+    -Directed: Each edge is an ordered pair from its source to its destination
+    -Undirected: An edge can be traversed in either direction
     -Path: An ordering of vertices that can be traversed from one to the next
-    -Adjacent Vertices: Vertices directly conncted by an edge
-    -Degree: The number of edges coming in or out of a vertex
+    -Adjacent Vertices: Vertices directly connected by an edge
+    -Degree: Count incident edges in an undirected graph, and count incoming and outgoing edges separately in a directed graph
     -Weighted: Weights on the edges
     */
 
-        //Graph-3: Create an adjacency list from the given graph.
+        // Graph-3: Read each row as a source followed by its outgoing neighbors.
         /*
     0: 3
     1: 2, 5
@@ -71,7 +73,7 @@ class Main {
     7: 4
     */
 
-        //Graph-4: Create an adjacency matrix from the given graph.
+        // Graph-4: The undirected graph below uses positive weights. Zero marks a missing edge.
         int[][] matrix = new int[][] {/*
             A  B  C  D  E
     /*A*/
@@ -84,6 +86,6 @@ class Main {
 
     // Compute the table index for the provided key
     private int hash(Object key, int tableSize) {
-        return key.hashCode() % tableSize;
+        return Math.floorMod(key.hashCode(), tableSize);
     }
 }
