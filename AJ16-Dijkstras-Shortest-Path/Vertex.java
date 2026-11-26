@@ -1,60 +1,57 @@
-import java.util.*;
+import java.util.ArrayDeque;
 
 public class Vertex<T> implements Comparable<Vertex<T>> {
-
     T label;
-    int distance;
-    Vertex previous;
+    long distance;
+    Vertex<T> previous;
 
     public Vertex(T label) {
         this.label = label;
-        this.distance = -1;
-        this.previous = null;
+        distance = Long.MAX_VALUE;
     }
 
     public T getLabel() {
         return label;
     }
+
     public void setlabel(T label) {
         this.label = label;
     }
-    public int getDistance() {
+
+    public long getDistance() {
         return distance;
     }
-    public void setDistance(int distance) {
+
+    public void setDistance(long distance) {
         this.distance = distance;
     }
-    public Vertex getPrevious() {
+
+    public Vertex<T> getPrevious() {
         return previous;
     }
-    public void setPrevious(Vertex previous) {
+
+    public void setPrevious(Vertex<T> previous) {
         this.previous = previous;
     }
 
     @Override
     public int compareTo(Vertex<T> other) {
-        int result = distance - other.getDistance();
-        if (result < 0) {
-            return -1;
-        } else if (result > 0) {
-            return 1;
-        }
-        return 0;
+        return Long.compare(distance, other.distance);
     }
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("Vertex: " + label);
-        result.append(" Distance: " + distance);
-        result.append(" Path: " + getShortestPath());
-        return result.toString();
+        String cost = distance == Long.MAX_VALUE ? "unreachable" : Long.toString(distance);
+        return "Vertex: " + label + " Distance: " + cost + " Path: " + getShortestPath();
     }
 
     public String getShortestPath() {
-        if (previous == null) {
-            return label.toString();
+        if (distance == Long.MAX_VALUE) return "[]";
+
+        var path = new ArrayDeque<String>();
+        for (Vertex<T> vertex = this; vertex != null; vertex = vertex.previous) {
+            path.addFirst(String.valueOf(vertex.label));
         }
-        return label.toString() + ", " + previous.getShortestPath();
+        return String.join(", ", path);
     }
 }

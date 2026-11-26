@@ -1,73 +1,66 @@
-import java.util.*;
-import java.lang.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class ShortestPathTree {
+    private record Candidate(int vertex, long distance) {}
 
     int[][] graph;
     ArrayList<Vertex<Integer>> vertices;
-    PriorityQueue<Vertex<Integer>> unvisited;
+    private PriorityQueue<Candidate> unvisited;
 
     public void dijkstra(int[][] graph, int source) {
-
+        validate(graph, source);
         this.graph = graph;
-        vertices = new ArrayList<>();
-        unvisited = new PriorityQueue<>();
+        vertices = new ArrayList<>(graph.length);
+        unvisited = new PriorityQueue<>(
+                Comparator.comparingLong(Candidate::distance).thenComparingInt(Candidate::vertex));
 
-        //initialize vertices
-        //set all distances to infinity (max value)
         for (int i = 0; i < graph.length; i++) {
-            Vertex<Integer> vertex = new Vertex<>(i);
-            vertex.setDistance(Integer.MAX_VALUE);
-            vertices.add(vertex);
+            vertices.add(new Vertex<>(i));
         }
-
-        //set the distance of the source to zero
         vertices.get(source).setDistance(0);
+        unvisited.add(new Candidate(source, 0));
 
-        //fill the priority queue
-        for (Vertex vertex : vertices) {
-            unvisited.add(vertex);
-        }
-
-        //run the algorithm
-        Vertex<Integer> smallest;
         while (!unvisited.isEmpty()) {
-            smallest = unvisited.poll();
-            updateNeighborDistances(smallest);
+            Candidate candidate = unvisited.remove();
+            Vertex<Integer> current = vertices.get(candidate.vertex());
+            if (candidate.distance() == current.getDistance()) {
+                updateNeighborDistances(current);
+            }
         }
-
-        //print the verticies
         printSolution();
     }
-    public void updateNeighborDistances(Vertex<Integer> smallest) {
 
-        int index = smallest.getLabel();
-        //for each vertex in the graph
-        for (int neighborIndex = 0; neighborIndex < graph[index].length;
-             neighborIndex++) {
+    private static void validate(int[][] graph, int source) {
+        if (graph == null || source < 0 || source >= graph.length) {
+            throw new IllegalArgumentException("Source must be a vertex in the graph");
+        }
+        for (int[] row : graph) {
+            if (row == null || row.length != graph.length) {
+                throw new IllegalArgumentException("The adjacency matrix must be square");
+            }
+            for (int weight : row) {
+                if (weight < 0) throw new IllegalArgumentException("Edge weights cannot be negative");
+            }
+        }
+    }
 
-            //if there is an edge connecting the two vertices
-            if (graph[index][neighborIndex] > 0) {
-                //get the neighbor
-                Vertex neighbor = vertices.get(neighborIndex);
-                //if the neighbor hasn't been visited
-                if (unvisited.contains(neighbor)) {
-                    //compare the neighbor's current and alternate distances
-                    int current = neighbor.getDistance();
-                    int alternate =
-                        smallest.getDistance() + graph[index][neighborIndex];
-                    //if the alternate is smaller than the current...
-                    if (alternate < current) {
-                        //replace the current with the alternate
-                        neighbor.setDistance(alternate);
-                        neighbor.setPrevious(smallest);
-                        //remove and add the neighbor...
-                        //...to update it's priority in the queue
-                        unvisited.remove(neighbor);
-                        unvisited.add(neighbor);
-                    }
-                }
+    public void updateNeighborDistances(Vertex<Integer> current) {
+        int[] weights = graph[current.getLabel()];
+        if (current.getDistance() == Long.MAX_VALUE) return;
+
+        for (int index = 0; index < weights.length; index++) {
+            int weight = weights[index];
+            // The original matrix uses zero to indicate no edge.
+            if (weight == 0) continue;
+
+            Vertex<Integer> neighbor = vertices.get(index);
+            long alternate = current.getDistance() + weight;
+            if (alternate < neighbor.getDistance()) {
+                neighbor.setDistance(alternate);
+                neighbor.setPrevious(current);
+                unvisited.add(new Candidate(index, alternate));
             }
         }
     }
