@@ -1,0 +1,8 @@
+# Fictional sample library
+stock oak 1
+request Ada oak
+request Bea oak
+request Cy oak
+return Ada oak
+cancel Cy oak
+return Bea oak

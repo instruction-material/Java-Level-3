@@ -19,3 +19,4 @@ Build a medium-size Java simulation that proves readiness for larger software wo
 ## Stretch
 - Add save/load support and a replayable event log.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)

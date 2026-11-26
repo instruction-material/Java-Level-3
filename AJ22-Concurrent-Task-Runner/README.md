@@ -12,3 +12,4 @@ Build a bounded concurrent task runner with deterministic reporting.
 ## Stretch
 - Add cancellation for tasks that exceed a configured time limit.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)

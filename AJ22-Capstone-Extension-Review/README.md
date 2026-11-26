@@ -12,3 +12,4 @@ Perform a structured second pass on the event-driven capstone.
 ## Stretch
 - Replace one conditional-heavy area with a small interface-based design.
 
+Continue in the [event-driven simulation workbook](../AJ22-Event-Driven-Simulation-Capstone/starter/). Run the extension checks from the existing project and compare the [matching reference](../AJ22-Event-Driven-Simulation-Capstone/solution/).
