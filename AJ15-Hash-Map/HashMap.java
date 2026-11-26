@@ -1,11 +1,13 @@
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 public class HashMap<K extends Comparable<K>, V> implements Map<K, V> {
 
     private int numNodes;
     private int tableSize;
-    private Object[] hashTable;
+    private ArrayList<Node> hashTable;
 
     private static final int[] PRIMES = {
         2,         3,        5,         7,         11,        13,
@@ -37,162 +39,104 @@ public class HashMap<K extends Comparable<K>, V> implements Map<K, V> {
     //CONSTRUCTOR -----------------------------------------------
     public HashMap() {
         this.tableSize = 47;
-        this.hashTable = new Object[this.tableSize];
+        this.hashTable = new ArrayList<>(Collections.nCopies(tableSize, null));
     }
 
-    //HASH FUNCTION ---------------------------------------------
-    private int hash(K key) {
-        return Math.abs(key.hashCode() % this.tableSize);
-    }
-
-    //LOAD FACTOR------------------------------------------------
-    private double loadFactor() {
-        return (double)numNodes / tableSize;
-    }
-
-    //GET INDEX METHOD ------------------------------------------
     private int getIndex(K key, boolean inserting) {
+        Objects.requireNonNull(key, "key");
+        int index = Math.floorMod(key.hashCode(), tableSize);
+        int firstDeleted = -1;
 
-        int index = hash(key);
-        Node node = getNode(index);
+        for (int probes = 0; probes < tableSize; probes++) {
+            Node node = hashTable.get(index);
+            if (node == null) {
+                return inserting && firstDeleted >= 0 ? firstDeleted : index;
+            }
 
-        //linear probe
-        while (node != null && !key.equals(node.key)) {
-            if (inserting && node.tombStone) {
-                break;
+            if (node.tombStone) {
+                if (inserting && firstDeleted < 0) firstDeleted = index;
+            } else if (key.equals(node.key)) {
+                return index;
             }
             index = (index + 1) % tableSize;
-            node = getNode(index);
         }
-
-        return index;
+        return firstDeleted;
     }
 
-    //GET NODE METHODS ------------------------------------------
-    //returns a node, possibly null or marked as removed
-    private Node getNode(int index) {
-        Node node = (Node)hashTable[index];
+    private Node getExistingNode(K key) {
+        int index = getIndex(key, false);
+        Node node = index < 0 ? null : hashTable.get(index);
+        if (node == null) throw new IllegalArgumentException("Cannot find key");
         return node;
     }
 
-    //gets a Node in a particular table (useful for rehashing)
-    private Node getNode(int index, Object[] table) {
-        // assists with rehashing into a bigger table
-        Node n = (Node)table[index];
-        return n;
-    }
-
-    //returns a node, but if it's null or marked as removed, it throws an exception
-    private Node getExistingNode(int index) {
-        Node node = (Node)hashTable[index];
-        if (node == null || node.tombStone) {
-            throw new IllegalArgumentException("ERROR: cannot find key");
-        }
-        return node;
-    }
-
-    // MAP METHODS -----------------------------------------------
-    //inserts a key-value pair
     @Override
     public void insert(K key, V value) {
-
-        //rehash if neccessary
-        if (loadFactor() >= 0.5) {
-            rehash();
-        }
-
-        //add the new node
         int index = getIndex(key, true);
-        Node node = new Node(key, value);
-        hashTable[index] = node;
-        this.numNodes++;
+        Node existing = index < 0 ? null : hashTable.get(index);
+        if (existing != null && !existing.tombStone) {
+            throw new IllegalArgumentException("Key already exists");
+        }
+        if (index < 0 || 2L * (numNodes + 1) > tableSize) {
+            rehash();
+            index = getIndex(key, true);
+        }
+        hashTable.set(index, new Node(key, value));
+        numNodes++;
     }
 
-    //removes a key-value pair
     @Override
     public V remove(K key) {
-        Node node = getExistingNode(getIndex(key, false));
-        //mark as deleted with the tombstone,
-        //but don't actually delete
+        Node node = getExistingNode(key);
         node.tombStone = true;
-        this.numNodes--;
+        numNodes--;
         return node.value;
     }
 
-    //updates value associated with key
     @Override
     public void put(K key, V value) {
-        Node node = getExistingNode(getIndex(key, false));
-        node.value = value;
+        getExistingNode(key).value = value;
     }
 
-    //get value associated with key
     @Override
     public V get(K key) {
-        Node node = getExistingNode(getIndex(key, false));
-        return node.value;
+        return getExistingNode(key).value;
     }
 
-    //returns whether the hash map has the value or not
     @Override
     public boolean has(K key) {
-        try {
-            Node node = getExistingNode(getIndex(key, false));
-        } catch (IllegalArgumentException ex) {
-            return false;
-        }
-        return true;
+        int index = getIndex(key, false);
+        return index >= 0 && hashTable.get(index) != null;
     }
 
-    //returns the number of nodes that have been added
     @Override
     public int size() {
-        return this.numNodes;
+        return numNodes;
     }
 
-    //REHASH METHOD -------------------------------------------
     private void rehash() {
-        System.out.println("REHASH!!");
-        Object[] oldTable = hashTable;
-        int oldtableSize = tableSize;
-        tableSize *= 2;
-        numNodes = 0;
-
-        //update the tablesize to closest prime number
-        int i = 0;
-        while (tableSize > PRIMES[i]) {
-            i++;
+        long target = Math.min(2L * tableSize, PRIMES[PRIMES.length - 1]);
+        int next = 0;
+        while (PRIMES[next] < target) next++;
+        if (PRIMES[next] <= tableSize) {
+            throw new IllegalStateException("No larger supported table");
         }
-        tableSize = PRIMES[i];
 
-        //create a new array with the bigger size
-        hashTable = new Object[this.tableSize];
-
-        //for each element in the old array
-        for (int j = 0; j < oldtableSize; j++) {
-            Node node = getNode(j, oldTable);
-
-            //if the node exists and is not "removed"
-            if (node != null && !node.tombStone) {
-                insert(node.key, node.value);
-            }
+        var oldTable = hashTable;
+        tableSize = PRIMES[next];
+        hashTable = new ArrayList<>(Collections.nCopies(tableSize, null));
+        numNodes = 0;
+        for (Node node : oldTable) {
+            if (node != null && !node.tombStone) insert(node.key, node.value);
         }
     }
 
-    /** FOR PRINTING THE HASH MAP -- NOT FOR STUDENTS TO CODE*/
+    @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("{");
-        for (int i = 0; i < tableSize; i++) {
-            Node node = getNode(i);
-            if (node != null && !node.tombStone) {
-                stringBuilder.append(node.toString());
-                if (i < tableSize - 1) {
-                    stringBuilder.append(", ");
-                }
-            }
+        var entries = new StringJoiner(", ", "{", "}");
+        for (Node node : hashTable) {
+            if (node != null && !node.tombStone) entries.add(node.toString());
         }
-        stringBuilder.append("\b\b}");
-        return stringBuilder.toString();
+        return entries.toString();
     }
 }
