@@ -1,114 +1,70 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
-import java.util.ArrayList;
-
-/*Simplified search engine that takes in keywords from standard input and finds the corresponding url(s). The search results are then printed to standard output.*/
 
 public final class Main {
-
-    //Create a hashmap
-    private static HashMap<String, ArrayList<String>> data = new HashMap<>();
+    private record Index(HashMap<String, LinkedHashSet<String>> terms, int pages) {}
 
     public static void main(String[] args) {
-
-        //Prepare the search engine
-        Scanner scanner = new Scanner(System.in);
-        try {
+        try (var console = new Scanner(System.in, StandardCharsets.UTF_8)) {
             System.out.println("\nWelcome to the Juni Search Engine!");
             System.out.print("Please enter a file name: ");
+            if (!console.hasNextLine()) return;
 
-            String fileName = scanner.next();
-            File inputFile = new File(fileName);
-            Scanner fileScanner = new Scanner(inputFile);
-
-            loadFile(fileScanner);
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //If the input file doesn't have the correct format
-            System.err.println("ERROR: enter a valid input file name.");
-            return;
-        } catch (FileNotFoundException e) {
-            //If the file is not found
-            System.err.println("ERROR: file not found.");
-            return;
-        }
-
-        //Run the search engine forever
-        while (true) {
-            System.out.print("\nSearch: ");
-            performSearch(scanner.next());
-        }
-    }
-
-    // Populates the HashMap
-    private static void loadFile(Scanner fileScanner) {
-
-        String url = null;
-        String line = null;
-        int numUrls = 0;
-
-        System.out.println("Loading...");
-        while (fileScanner.hasNextLine()) {
-
-            line = fileScanner.nextLine();
-            //If the line contains a space, there's a keyword
-            if (line.contains(" ")) {
-                String[] words = line.split(" ");
-                addUrl(url, words);
-                numUrls++;
-            } else {
-                //If the line doesn't contain a space, it's a url
-                url = line;
+            Index index;
+            try (var corpus = new Scanner(Path.of(console.nextLine().strip()), StandardCharsets.UTF_8)) {
+                index = load(corpus);
+                if (corpus.ioException() != null) throw corpus.ioException();
+            } catch (IOException error) {
+                System.err.println("ERROR: could not read file.");
+                return;
+            } catch (IllegalArgumentException error) {
+                System.err.println("ERROR: " + error.getMessage());
+                return;
             }
-            //System.out.println(line);
-        }
+            System.out.printf("Successfully loaded %d urls and %d keywords.%n", index.pages(), index.terms().size());
 
-        //Print that it worked successfully
-        System.out.println("Done!");
-        System.out.println("Successfully loaded " + numUrls + " urls and " +
-                           data.size() + " keywords.");
-    }
+            while (console.hasNextLine()) {
+                String word = console.nextLine().strip().toLowerCase(Locale.ROOT);
+                if (word.isEmpty()) continue;
 
-    //Adds given url with corresponding keywords in the HashMap
-    private static void addUrl(String url, String[] words) {
-
-        // For each word in the list of words
-        for (String word : words) {
-            // Create a new array list
-            ArrayList<String> urls = new ArrayList<>();
-            // If the word is not already in the hashmap
-            if (!data.has(word)) {
-                urls.add(url); // Add the provided url to the array list
-                data.insert(
-                    word,
-                    urls); // Insert the word and the array list as a <key, value> pair
-            } else { // If the word is already in the map
-                urls = data.get(
-                    word); // Obtain the array list associated with thhe word
-                urls.add(url);        // Add the provided url to the array list
-                data.put(word, urls); // Update the urls array list for the word
+                System.out.println("\nSearch: " + word + "\nRESULTS:");
+                List<String> urls = index.terms().has(word)
+                        ? List.copyOf(index.terms().get(word)) : List.of();
+                for (int i = 0; i < urls.size(); i++) {
+                    System.out.printf("%d: %s%n", i + 1, urls.get(i));
+                }
+                System.out.printf("%d search results.%n", urls.size());
             }
         }
     }
 
-    // Directs user input to the appropriate helper method to produce the correct search result for a keyword
-    private static void performSearch(String word) {
-
-        ArrayList<String> urls = new ArrayList<String>();
-
-        //Perform the actual search
-        if (data.has(word)) {
-            urls = data.get(word);
-        } else {
-            urls.clear();
+    private static Index load(Scanner corpus) {
+        var terms = new HashMap<String, LinkedHashSet<String>>();
+        var indexedPages = new LinkedHashSet<String>();
+        String currentUrl = null;
+        while (corpus.hasNextLine()) {
+            String line = corpus.nextLine().strip();
+            if (line.isEmpty()) continue;
+            if ((line.startsWith("https://") || line.startsWith("http://"))
+                    && line.codePoints().noneMatch(Character::isWhitespace)) {
+                currentUrl = line;
+                continue;
+            }
+            if (currentUrl == null) {
+                throw new IllegalArgumentException("Keyword line before a page address");
+            }
+            for (String token : line.split("(?U)\\s+")) {
+                String word = token.toLowerCase(Locale.ROOT);
+                if (!terms.has(word)) terms.insert(word, new LinkedHashSet<>());
+                terms.get(word).add(currentUrl);
+            }
+            indexedPages.add(currentUrl);
         }
-
-        //Print the results
-        System.out.println("\nRESULTS:");
-        for (int i = 0; i < urls.size(); i++) {
-            System.out.println((i + 1) + ": " + urls.get(i));
-        }
-        System.out.println(urls.size() + " search results.");
+        return new Index(terms, indexedPages.size());
     }
 }
