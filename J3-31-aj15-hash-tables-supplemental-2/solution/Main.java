@@ -1,36 +1,41 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
-// Demonstrate a small score calculation with named sample data
 public class Main {
-    private static final List<Integer> SAMPLE_VALUES = List.of(2, 5, 8, 13);
-    private static final int EVEN_DIVISOR = 2;
-    private static final int ODD_MULTIPLIER = 2;
+    record Entry(int key, int value) {}
 
-    // Compute the total score from the even and odd value rules
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-
-        // Apply the scoring rule to each value
-        for (int value : values) {
-            // Score even values with the divisor rule
-            if (value % EVEN_DIVISOR == 0) {
-                total += value / EVEN_DIVISOR;
-            }
-            // Score odd values with the multiplier rule
-            else {
-                total += value * ODD_MULTIPLIER;
-            }
-        }
-
-        return total;
+    static List<List<Entry>> table(int capacity) {
+        var buckets = new ArrayList<List<Entry>>();
+        for (int i = 0; i < capacity; i++) buckets.add(new ArrayList<>());
+        return buckets;
     }
 
-    /**
-	 * @brief Print the sample score
-	 *
-	 * @param args Command-line arguments
-	 */
+    static void put(List<List<Entry>> buckets, int key, int value) {
+        var bucket = buckets.get(Math.floorMod(key, buckets.size()));
+        for (int i = 0; i < bucket.size(); i++) {
+            if (bucket.get(i).key() == key) {
+                bucket.set(i, new Entry(key, value));
+                return;
+            }
+        }
+        bucket.add(new Entry(key, value));
+    }
+
+    static OptionalInt get(List<List<Entry>> buckets, int key) {
+        for (Entry entry : buckets.get(Math.floorMod(key, buckets.size()))) {
+            if (entry.key() == key) return OptionalInt.of(entry.value());
+        }
+        return OptionalInt.empty();
+    }
+
     public static void main(String[] args) {
-        System.out.println(computeScore(SAMPLE_VALUES));
+        var buckets = table(3);
+        put(buckets, -1, 8);
+        put(buckets, 2, 9);
+        put(buckets, -1, 7);
+        System.out.println(get(buckets, -1).orElseThrow());
+        System.out.println(get(buckets, 2).orElseThrow());
+        System.out.println(get(buckets, 5));
     }
 }

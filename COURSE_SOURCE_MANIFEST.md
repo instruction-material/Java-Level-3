@@ -82,9 +82,11 @@ Canonical source repository: `Java-Level-3`
 | `AJ14-BST-Traversal-Packs` |
 | `AJ14-BST-Removal-Packs` |
 | `AJ15-Hash-Map` |
+| `AJ15-Hash-Map-Packs` |
 | `AJ15-Hash-Map-Starter` |
 | `AJ15-Open-Addressing-Reference` |
 | `AJ15-Search-Engine` |
+| `AJ15-Search-Engine-Packs` |
 | `AJ15-Search-Engine-Starter` |
 | `AJ15-Separate-Chaining-Hash-Table` |
 | `AJ16-Dijkstras-Shortest-Path` |

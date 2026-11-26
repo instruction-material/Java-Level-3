@@ -1,36 +1,23 @@
+import java.util.ArrayList;
 import java.util.List;
 
-// Demonstrate a small score calculation with named sample data
 public class Main {
-    private static final List<Integer> SAMPLE_VALUES = List.of(2, 5, 8, 13);
-    private static final int EVEN_DIVISOR = 2;
-    private static final int ODD_MULTIPLIER = 2;
+    record Entry(int key, String value) {}
 
-    // Compute the total score from the even and odd value rules
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-
-        // Apply the scoring rule to each value
-        for (int value : values) {
-            // Score even values with the divisor rule
-            if (value % EVEN_DIVISOR == 0) {
-                total += value / EVEN_DIVISOR;
-            }
-            // Score odd values with the multiplier rule
-            else {
-                total += value * ODD_MULTIPLIER;
-            }
+    static List<List<Entry>> resize(List<List<Entry>> oldBuckets, int capacity) {
+        if (capacity <= 0) throw new IllegalArgumentException("Capacity must be positive");
+        var buckets = new ArrayList<List<Entry>>(capacity);
+        for (int i = 0; i < capacity; i++) buckets.add(new ArrayList<>());
+        for (var bucket : oldBuckets) {
+            for (var entry : bucket) buckets.get(Math.floorMod(entry.key(), capacity)).add(entry);
         }
-
-        return total;
+        return buckets;
     }
 
-    /**
-	 * @brief Print the sample score
-	 *
-	 * @param args Command-line arguments
-	 */
     public static void main(String[] args) {
-        System.out.println(computeScore(SAMPLE_VALUES));
+        var entries = List.of(List.of(new Entry(2, "two"), new Entry(5, "five"), new Entry(-1, "negative")));
+        var resized = resize(entries, 3);
+        System.out.println(resized.get(2).size());
+        System.out.println(resize(resized, 5).get(0));
     }
 }
