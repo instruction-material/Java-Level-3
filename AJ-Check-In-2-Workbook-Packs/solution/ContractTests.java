@@ -23,12 +23,20 @@ public class ContractTests {
             System.out.println("Equal-range checks passed");
             return;
         }
+        if (args.length == 1 && args[0].equals("bubble")) {
+            expectArray(new int[]{12, 23, 12, 20, 43, 50}, Main.bubble(
+                    new int[]{50, 23, 12, 43, 12, 20}, 2));
+            int[] input = {3, 1, 3, -4};
+            expectArray(new int[]{-4, 1, 3, 3}, Main.bubble(input, input.length));
+            expectArray(new int[]{3, 1, 3, -4}, input);
+            expectArray(new int[0], Main.bubble(new int[0], 5));
+            System.out.println("Optional bubble checks passed");
+            return;
+        }
         expectArray(new int[]{14, 23, 76, 75, 34, 25}, Main.selection(
                 new int[]{34, 23, 76, 75, 14, 25}, 2));
         expectArray(new int[]{13, 15, 27, 99, 8, 1}, Main.insertion(
                 new int[]{99, 15, 27, 13, 8, 1}, 3));
-        expectArray(new int[]{12, 23, 12, 20, 43, 50}, Main.bubble(
-                new int[]{50, 23, 12, 43, 12, 20}, 2));
         expectArray(new int[]{1, 2, 3, 4, 5, 7, 10, 11}, Main.merge(
                 new int[]{1, 4, 7, 10}, new int[]{2, 3, 5, 11}));
         SplittableRandom random = new SplittableRandom(2026L);
@@ -39,7 +47,6 @@ public class ContractTests {
             Arrays.sort(expected);
             expectArray(expected, Main.selection(data, size));
             expectArray(expected, Main.insertion(data, size));
-            expectArray(expected, Main.bubble(data, size));
             expectArray(expected, Main.sortMerge(data));
             expectArray(original, data);
         }

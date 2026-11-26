@@ -18,7 +18,7 @@ CASES = {
                                           ["[-1, 2, 2, 3, 4, 8]"]),
     "AJ-Check-In-2-Workbook-Packs": ("Trace the next minimum exchanges", [
         "[14, 23, 76, 75, 34, 25]", "[13, 15, 27, 99, 8, 1]",
-        "[12, 23, 12, 20, 43, 50]", "[1, 2, 3, 4, 5, 7, 10, 11]"
+        "[1, 2, 3, 4, 5, 7, 10, 11]"
     ]),
     "AJ-Check-In-2-Benchmark-Packs": ("Time a copy and verify the sorted result", None),
     "J3-19-check-in-2-supplemental-2": ("Verify both order and the multiset of values", ["true", "false"]),
@@ -57,6 +57,8 @@ def verify_role(directory, folder, role):
         assert output(java(directory, "Main", "last")) == ["Last-exchange comparisons: 4", "[1, 2, 3, 4, 5]"]
         assert output(java(directory, "ContractTests", "last")) == ["Last-exchange checks passed"]
     if folder == "AJ-Check-In-2-Workbook-Packs":
+        assert output(java(directory, "Main", "bubble")) == ["[12, 23, 12, 20, 43, 50]"]
+        assert output(java(directory, "ContractTests", "bubble")) == ["Optional bubble checks passed"]
         assert output(java(directory, "Main", "range")) == ["[0, 3]"]
         assert output(java(directory, "ContractTests", "range")) == ["Equal-range checks passed"]
 

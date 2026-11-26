@@ -57,9 +57,12 @@ public class Main {
             System.out.println(Arrays.toString(rangeAfterSorting(new int[]{8, 2, 5, 2, 2}, 2)));
             return;
         }
+        if (args.length == 1 && args[0].equals("bubble")) {
+            System.out.println(Arrays.toString(bubble(new int[]{50, 23, 12, 43, 12, 20}, 2)));
+            return;
+        }
         System.out.println(Arrays.toString(selection(new int[]{34, 23, 76, 75, 14, 25}, 2)));
         System.out.println(Arrays.toString(insertion(new int[]{99, 15, 27, 13, 8, 1}, 3)));
-        System.out.println(Arrays.toString(bubble(new int[]{50, 23, 12, 43, 12, 20}, 2)));
         System.out.println(Arrays.toString(sortMerge(new int[]{7, 1, 3, 5, 11, 4, 10, 2})));
     }
 }
