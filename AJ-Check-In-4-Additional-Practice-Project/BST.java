@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.StringJoiner;
 
 public class BST implements BSTInterface {
 
@@ -169,92 +170,63 @@ public class BST implements BSTInterface {
 
     @Override
     public String toString() {
-        return inOrder(this.root);
+        return inOrder();
     }
+
     public String inOrder() {
-        return inOrder(this.root);
+        var values = new StringJoiner(" ");
+        inOrder(root, values);
+        return values.toString();
     }
-    private String inOrder(Node node) {
 
-        String string = "";
-
-        //base case
-        if (node == null) {
-            return string;
-        }
-
-        //add the left subtree values
-        string += inOrder(node.left);
-        //add in the MIDDLE of children
-        string += node.value;
-        //add the right subtree values
-        string += inOrder(node.right);
-
-        return string;
+    private void inOrder(Node node, StringJoiner values) {
+        if (node == null) return;
+        inOrder(node.left, values);
+        values.add(Integer.toString(node.value));
+        inOrder(node.right, values);
     }
+
     public String preOrder() {
-        return preOrder(this.root);
+        var values = new StringJoiner(" ");
+        preOrder(root, values);
+        return values.toString();
     }
-    private String preOrder(Node node) {
-        String string = "";
 
-        //base case
-        if (node == null) {
-            return string;
-        }
-
-        //add BEFORE children
-        string += node.value;
-        //add the left subtree values
-        string += preOrder(node.left);
-        //add the right subtree values
-        string += preOrder(node.right);
-
-        return string;
+    private void preOrder(Node node, StringJoiner values) {
+        if (node == null) return;
+        values.add(Integer.toString(node.value));
+        preOrder(node.left, values);
+        preOrder(node.right, values);
     }
+
     public String postOrder() {
-        return postOrder(this.root);
+        return postOrder(root);
     }
+
     public String postOrder(Node node) {
-        String string = "";
-
-        //base case
-        if (node == null) {
-            return string;
-        }
-
-        //add the left subtree values
-        string += postOrder(node.left);
-        //add the right subtree values
-        string += postOrder(node.right);
-        //add AFTER children
-        string += node.value;
-
-        return string;
+        var values = new StringJoiner(" ");
+        postOrder(node, values);
+        return values.toString();
     }
 
+    private void postOrder(Node node, StringJoiner values) {
+        if (node == null) return;
+        postOrder(node.left, values);
+        postOrder(node.right, values);
+        values.add(Integer.toString(node.value));
+    }
     public String BFS() {
-        String string = "";
+        if (root == null) return "";
 
-        Queue<Node> queue = new LinkedList<>();
-        queue.add(this.root);
-
+        var queue = new ArrayDeque<Node>();
+        var keys = new StringJoiner(" ");
+        queue.addLast(root);
         while (!queue.isEmpty()) {
-
-            // remove the front of the queue
-            Node head = queue.remove();
-            string += head.value;
-
-            // add left
-            if (head.left != null) {
-                queue.add(head.left);
-            }
-
-            // add right
-            if (head.right != null) {
-                queue.add(head.right);
-            }
+            Node current = queue.removeFirst();
+            keys.add(Integer.toString(current.value));
+            if (current.left != null) queue.addLast(current.left);
+            if (current.right != null) queue.addLast(current.right);
         }
-        return string;
+        return keys.toString();
     }
 }
