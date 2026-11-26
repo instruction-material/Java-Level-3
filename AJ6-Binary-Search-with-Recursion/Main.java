@@ -36,7 +36,7 @@ class Main {
         }
 
         //recursive case
-        int middle = (int)((upper + lower) / 2);
+        int middle = lower + (upper - lower) / 2;
         if (target == numbers[middle]) {
             //we found the number!
             return middle;
@@ -69,7 +69,7 @@ class Main {
         }
 
         //recursive case
-        int middle = (int)(numbers.length / 2);
+        int middle = numbers.length / 2;
         if (target == numbers[middle]) {
 
             //we found the number!

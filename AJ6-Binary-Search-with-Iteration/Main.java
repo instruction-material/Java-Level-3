@@ -27,7 +27,7 @@ class Main {
 
         while (lower <= upper) {
 
-            int middle = (int)((lower + upper) / 2);
+            int middle = lower + (upper - lower) / 2;
 
             if (target == numbers[middle]) {
                 return middle;
