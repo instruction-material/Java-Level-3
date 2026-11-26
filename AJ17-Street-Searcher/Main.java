@@ -16,8 +16,8 @@ class Main {
 
         //load data from a file
         System.out.println("\nWelcome to Street Searcher!");
-        while (locations.size() <= 0) {
-            loadData();
+        while (locations.isEmpty()) {
+            if (!loadData()) return;
         }
 
         //print out available locations
@@ -27,23 +27,24 @@ class Main {
         }
         System.out.println();
 
-        //run the main loop forever
         pathFinder = new Pathfinder(graph, locations);
-        while (true) {
-            runProgram();
+        while (runProgram()) {
+            // The next iteration accepts another route query.
         }
     }
 
-    private static void runProgram() {
+    private static boolean runProgram() {
         //this is the main functionality of the program
         try {
             System.out.print("Enter a starting location: ");
-            String startName = scanner.nextLine();
+            if (!scanner.hasNextLine()) return false;
+            String startName = scanner.nextLine().strip();
             if (!graph.hasVertex(startName)) {
                 throw new IllegalArgumentException();
             }
             System.out.print("Enter an ending location: ");
-            String endName = scanner.nextLine();
+            if (!scanner.hasNextLine()) return false;
+            String endName = scanner.nextLine().strip();
             if (!graph.hasVertex(endName)) {
                 throw new IllegalArgumentException();
             }
@@ -56,64 +57,72 @@ class Main {
         } catch (IllegalArgumentException ex) {
             System.out.println("That location doesn't exist! Try again!");
         }
+        return true;
     }
 
-    private static void loadData() {
+    private static boolean loadData() {
+        System.out.print("Please enter a file name: ");
+        if (!scanner.hasNextLine()) return false;
+        File file = new File(scanner.nextLine());
+        int lineNumber = 0;
 
-        try {
-            //reset variables
-            graph = new WeightedGraph<>();
-            locations = new HashMap<>();
-
-            //get filename
-            System.out.print("Please enter a file name: ");
-            File file = new File(scanner.nextLine());
-            Scanner fileScanner = new Scanner(file);
-
-            //parse every line in the file
-            while (fileScanner.hasNext()) {
-                String[] tokens = fileScanner.nextLine().split(" ");
-                parseTokens(tokens);
+        try (Scanner lines = new Scanner(file)) {
+            while (lines.hasNextLine()) {
+                String line = lines.nextLine().strip();
+                lineNumber++;
+                if (!line.isEmpty()) parseTokens(line.split("\\s+"));
             }
-            fileScanner.close();
+            if (lines.ioException() != null) {
+                throw lines.ioException();
+            }
+            if (locations.isEmpty()) throw new IllegalArgumentException("File has no roads");
 
-            //print success!
             System.out.println("\nNetwork Loaded!");
             System.out.println("Loaded " + graph.getEdgesCount() + " roads.");
             System.out.println("Loaded " + locations.size() + " locations.");
-
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             System.out.println("ERROR: " + ex.getMessage());
+            clearNetwork();
+        } catch (IllegalArgumentException ex) {
+            System.out.printf("ERROR at road file line %d: %s%n", lineNumber, ex.getMessage());
+            clearNetwork();
         }
+        return true;
     }
+
+    private static void clearNetwork() {
+        graph = new WeightedGraph<>();
+        locations.clear();
+    }
+
     private static void parseTokens(String[] tokens) {
+        if (tokens.length != 4) throw new IllegalArgumentException("Expected four road fields");
 
-        // every line contains 4 tokens:
-        // 0: fromLat,fromLong
-        // 1: toLat,toLong
-        // 2: distance
-        // 3: fromName--toName
-
-        String[] names = tokens[3].split("--");
-
-        // from location
-        String fromName = names[0];
-        String[] fromCoords = tokens[0].split(",");
-        double fromLat = Double.parseDouble(fromCoords[0]);
-        double fromLong = Double.parseDouble(fromCoords[1]);
-        Location from = new Location(fromName, fromLat, fromLong);
-        locations.putIfAbsent(fromName, from);
-
-        // to location
-        String toName = names[1];
-        String[] toCoords = tokens[1].split(",");
-        double toLat = Double.parseDouble(toCoords[0]);
-        double toLong = Double.parseDouble(toCoords[1]);
-        Location to = new Location(toName, toLat, toLong);
-        locations.putIfAbsent(toName, to);
-
-        // add to graph: verticies are names, weight is distance
+        // Fields are source coordinates, destination coordinates, cost and source--destination.
+        String[] names = tokens[3].split("--", -1);
+        if (names.length != 2 || names[0].isBlank() || names[1].isBlank()) {
+            throw new IllegalArgumentException("Expected source--destination names");
+        }
+        Location from = parseLocation(names[0], tokens[0]);
+        Location to = parseLocation(names[1], tokens[1]);
         double distance = Double.parseDouble(tokens[2]);
-        graph.addEdge(fromName, toName, distance);
+        if (!Double.isFinite(distance) || distance < 0) {
+            throw new IllegalArgumentException("Road cost must be finite and nonnegative");
+        }
+
+        locations.putIfAbsent(from.getName(), from);
+        locations.putIfAbsent(to.getName(), to);
+        graph.addEdge(from.getName(), to.getName(), distance);
+    }
+
+    private static Location parseLocation(String name, String coordinateText) {
+        String[] coordinates = coordinateText.split(",", -1);
+        if (coordinates.length != 2) throw new IllegalArgumentException("Expected two coordinates");
+        double latitude = Double.parseDouble(coordinates[0]);
+        double longitude = Double.parseDouble(coordinates[1]);
+        if (!Double.isFinite(latitude) || !Double.isFinite(longitude)) {
+            throw new IllegalArgumentException("Coordinates must be finite");
+        }
+        return new Location(name, latitude, longitude);
     }
 }

@@ -1,99 +1,76 @@
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.PriorityQueue;
 
 public class Pathfinder {
+    record Route(List<String> stops, double distance) {}
+    private record Candidate(String name, double distance) {}
 
-    public static WeightedGraph<String, Double> graph;
-    public static HashMap<String, Location> locations;
-    public static PriorityQueue<Location> unvisited;
+    private final WeightedGraph<String, Double> graph;
+    private final Map<String, Location> locations;
 
     public Pathfinder(WeightedGraph<String, Double> graph,
                       HashMap<String, Location> locations) {
         this.graph = graph;
         this.locations = locations;
     }
+
     public void findShortestPath(Location start, Location end) {
-
-        //set every vertex's "distance from the source" to infinity
-        //set the source's distance to 0
-        for (Location location : locations.values()) {
-            location.setDistance(Double.MAX_VALUE);
-            location.setPrevious(null);
-        }
-        start.setDistance(0.0);
-
-        //fill the priority queue
-        unvisited = new PriorityQueue<>();
-        for (Location location : locations.values()) {
-            unvisited.add(location);
+        Optional<Route> result = shortestRoute(start.getName(), end.getName());
+        if (result.isEmpty()) {
+            System.out.printf("%nNo route from %s to %s.%n%n", start.getName(), end.getName());
+            return;
         }
 
-        //run the algorithm
-        Location nearest;
-        while (unvisited.contains(end)) {
-            nearest = unvisited.poll();
-            updateNeighbors(nearest);
+        Route route = result.get();
+        System.out.printf("%nTotal Distance: %.2f miles%n", route.distance());
+        List<String> stops = route.stops();
+        for (int i = 1; i < stops.size(); i++) {
+            String from = stops.get(i - 1);
+            String to = stops.get(i);
+            System.out.printf("%s --> %s(%.2f miles)%n", from, to, graph.getEdges(from).get(to));
         }
-
-        //print the verticies
-        System.out.printf("\nTotal Distance: %.2f miles\n",
-                          getTotalDistance(end));
-        printPath(end);
         System.out.println();
     }
-    private void updateNeighbors(Location nearest) {
 
-        //get the roads to all neighboring locations
-        HashMap<String, Double> roads;
-        roads = graph.getEdges(nearest.getName());
-
-        //update the distance of neighboring locations
-        for (String locationName : roads.keySet()) {
-            Location location = locations.get(locationName);
-            if (unvisited.contains(location)) {
-                double current = location.getDistance();
-                double alternate =
-                    nearest.getDistance() + roads.get(locationName);
-                //if the alternate is less than the current distance
-                if (alternate < current) {
-                    //replace the current with the alternate
-                    location.setDistance(alternate);
-                    location.setPrevious(nearest);
-                    //remove and add the neighboring location...
-                    //...to update it's priority in the queue
-                    unvisited.remove(location);
-                    unvisited.add(location);
+    Optional<Route> shortestRoute(String start, String target) {
+        if (!locations.containsKey(start) || !locations.containsKey(target)) {
+            return Optional.empty();
+        }
+        var distance = new HashMap<String, Double>();
+        var previous = new HashMap<String, String>();
+        var frontier = new PriorityQueue<>(
+                Comparator.comparingDouble(Candidate::distance).thenComparing(Candidate::name));
+        distance.put(start, 0.0);
+        frontier.add(new Candidate(start, 0.0));
+        while (!frontier.isEmpty()) {
+            Candidate current = frontier.remove();
+            if (current.distance() != distance.get(current.name())) continue;
+            if (current.name().equals(target)) {
+                return Optional.of(reconstruct(target, current.distance(), previous));
+            }
+            for (var road : graph.getEdges(current.name()).entrySet()) {
+                String next = road.getKey();
+                double cost = current.distance() + road.getValue();
+                if (cost < distance.getOrDefault(next, Double.POSITIVE_INFINITY)) {
+                    distance.put(next, cost);
+                    previous.put(next, current.name());
+                    frontier.add(new Candidate(next, cost));
                 }
             }
         }
+        return Optional.empty();
     }
-    private double getTotalDistance(Location location) {
-        Location previous = location.getPrevious();
 
-        //base case
-        if (previous == null)
-            return 0;
-
-        //recursive case
-        String name = location.getName();
-        String previousName = previous.getName();
-        double distance = graph.getEdges(previousName).get(name);
-        return distance + getTotalDistance(previous);
-    }
-    private void printPath(Location location) {
-        Location previous = location.getPrevious();
-
-        //base case
-        if (previous == null)
-            return;
-
-        //recursive case
-        printPath(previous);
-
-        String name = location.getName();
-        String previousName = previous.getName();
-        System.out.print(previousName + " --> " + name);
-
-        double distance = graph.getEdges(previousName).get(name);
-        System.out.printf("(%.2f miles)\n", distance);
+    private static Route reconstruct(String target, double distance, Map<String, String> previous) {
+        var route = new ArrayDeque<String>();
+        for (String current = target; current != null; current = previous.get(current)) {
+            route.addFirst(current);
+        }
+        return new Route(List.copyOf(route), distance);
     }
 }
