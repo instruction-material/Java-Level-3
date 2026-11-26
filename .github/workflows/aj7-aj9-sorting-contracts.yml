@@ -1,0 +1,22 @@
+name: AJ7 and AJ9 sorting contracts
+on:
+  push:
+    paths:
+      - "AJ7-*-Packs/**"
+      - "AJ9-*-Packs/**"
+      - "J3-1[3478]-*/**"
+      - "tools/verify-aj7-aj9-sorting.py"
+      - ".github/workflows/aj7-aj9-sorting-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Compile the starters and check Java 21 references for both units
+        run: JAVA_HOME="$JAVA_HOME_21_X64" python3 tools/verify-aj7-aj9-sorting.py

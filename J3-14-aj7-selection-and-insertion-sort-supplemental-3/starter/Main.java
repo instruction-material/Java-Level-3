@@ -1,15 +1,11 @@
-import java.util.List;
-
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    static long inversions(int[] values) {
+        // TODO: Count earlier-larger pairs without sorting.
+        throw new UnsupportedOperationException("Count earlier-larger pairs without sorting");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        System.out.println(inversions(new int[]{4, 1, 3, 1}));
+        System.out.println(inversions(new int[]{1, 1, 3, 4}));
     }
 }

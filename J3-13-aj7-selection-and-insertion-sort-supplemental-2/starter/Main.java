@@ -1,15 +1,15 @@
-import java.util.List;
+import java.util.Arrays;
 
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    record Task(String label, int priority) {}
+
+    static Task[] order(Task[] input) {
+        // TODO: Insert tasks by ascending priority and preserve ties.
+        throw new UnsupportedOperationException("Insert tasks by ascending priority and preserve ties");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        Task[] tasks = {new Task("upload", 2), new Task("review", 1), new Task("archive", 2)};
+        System.out.println(Arrays.stream(order(tasks)).map(Task::label).toList());
     }
 }

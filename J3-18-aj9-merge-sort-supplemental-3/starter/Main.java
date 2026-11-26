@@ -1,15 +1,12 @@
-import java.util.List;
+import java.util.Arrays;
 
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    static int[] union(int[] left, int[] right) {
+        // TODO: Merge attendance IDs and emit each distinct ID once.
+        throw new UnsupportedOperationException("Merge attendance IDs and emit each distinct ID once");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        System.out.println(Arrays.toString(union(new int[]{1, 1, 4, 8}, new int[]{1, 2, 8, 9})));
     }
 }
