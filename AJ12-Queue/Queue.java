@@ -10,6 +10,9 @@ public class Queue {
 
     // Constructor to initialize queue
     public Queue(int maxSize) {
+        if (maxSize <= 0) {
+            throw new IllegalArgumentException("Capacity must be positive");
+        }
         this.MAX = maxSize;
         this.queue = new int[MAX];
         this.front = 0;

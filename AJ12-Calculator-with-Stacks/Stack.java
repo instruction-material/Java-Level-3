@@ -10,11 +10,15 @@ public class Stack {
     }
 
     public boolean isEmpty() {
-        return (top <= 0);
+        return top == 0;
+    }
+
+    public int size() {
+        return top;
     }
 
     public void push(String x) {
-        if (top >= (MAX - 1)) {
+        if (top == s.length) {
             System.out.println("Stack Overflow");
         } else {
             s[top++] = x;
@@ -42,18 +46,10 @@ public class Stack {
     }
 
     public String toString() {
-        String str = "";
+        var values = new java.util.StringJoiner(" ", "[", "]");
         for (int i = 0; i < top; i++) {
-            if (i == 0) {
-                str += "[";
-            }
-            if (i != top - 1) {
-                str += s[i] + " ";
-            }
-            if (i == top - 1) {
-                str += s[i] + "]";
-            }
+            values.add(s[i]);
         }
-        return str;
+        return values.toString();
     }
 }

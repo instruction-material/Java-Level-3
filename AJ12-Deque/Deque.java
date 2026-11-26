@@ -9,6 +9,9 @@ public class Deque {
   */
 
     public Deque(int maxSize) {
+        if (maxSize <= 0) {
+            throw new IllegalArgumentException("Capacity must be positive");
+        }
         MAX = maxSize;
         deque = new int[MAX];
         nextFront = convertToIndex(0);

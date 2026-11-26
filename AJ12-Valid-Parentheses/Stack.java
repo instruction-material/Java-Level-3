@@ -14,11 +14,10 @@ public class Stack {
     }
 
     public void push(char x) {
-        if (top >= (MAX - 1)) {
-            System.out.println("Stack Overflow");
-        } else {
-            s[top++] = x;
+        if (top == s.length) {
+            s = java.util.Arrays.copyOf(s, Math.multiplyExact(s.length, 2));
         }
+        s[top++] = x;
     }
 
     public char pop() {
