@@ -1,14 +1,5 @@
-# AJ3 Review: Objects and Classes supplemental 2
+# Protect lending state
 
-Course: Java Level 3
-Module: AJ3 Review: Objects and Classes supplemental 2
+Model one library copy with a positive or zero stock count. A successful checkout consumes one copy. Return false on an empty shelf and preserve a nonnegative count.
 
-Use the starter folder first. The starter is intentionally incomplete, and the solution shows one clean way to finish the same build after the student has worked through it.
-
-Suggested flow:
-- Read the module brief and identify the core requirement.
-- Complete the TODO markers in the starter implementation.
-- Test at least one custom case beyond the default example.
-- Compare against the solution only after the student has a working draft.
-
-Quick run hint: `javac Main.java && java Main`
+[Starter](starter/) · [Reference](solution/)

@@ -1,0 +1,21 @@
+name: AJ1 to AJ3 review contracts
+on:
+  push:
+    paths:
+      - "AJ[1-3]-*-Packs/**"
+      - "J3-0[1-4]-*/**"
+      - "tools/verify-aj1-aj3-review.py"
+      - ".github/workflows/aj1-aj3-review-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify Java 21 review assignment roles
+        run: JAVA_HOME="$JAVA_HOME_21_X64" python3 tools/verify-aj1-aj3-review.py

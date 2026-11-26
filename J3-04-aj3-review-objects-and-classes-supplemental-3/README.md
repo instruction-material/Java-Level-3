@@ -1,14 +1,5 @@
-# AJ3 Review: Objects and Classes supplemental 3
+# Calculate fees through an abstract type
 
-Course: Java Level 3
-Module: AJ3 Review: Objects and Classes supplemental 3
+Use an abstract Parcel with a weight in whole units. A standard parcel costs 100 cents plus 25 per unit. An express parcel has the same base and costs 50 per unit. Reject negative weight.
 
-Use the starter folder first. The starter is intentionally incomplete, and the solution shows one clean way to finish the same build after the student has worked through it.
-
-Suggested flow:
-- Read the module brief and identify the core requirement.
-- Complete the TODO markers in the starter implementation.
-- Test at least one custom case beyond the default example.
-- Compare against the solution only after the student has a working draft.
-
-Quick run hint: `javac Main.java && java Main`
+[Starter](starter/) · [Reference](solution/)

@@ -1,15 +1,9 @@
-import java.util.List;
+import java.util.*;
 
-public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+class Main {
+    static long fare(int zones) {
+        // TODO: Calculate the fare in tokens.
+        throw new UnsupportedOperationException("Calculate the fare in tokens");
     }
-
-    public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
-    }
+    public static void main(String[] args) { System.out.println(fare(4)); }
 }

@@ -1,15 +1,11 @@
-import java.util.List;
+import java.util.*;
 
-public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+class Main {
+    static OptionalInt count(Scanner input) {
+        // TODO: Read through invalid lines to the first count.
+        throw new UnsupportedOperationException("Read through invalid lines to the first count");
     }
-
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        System.out.println(count(new Scanner("bad\n-3\n 7 \n8")).orElseThrow());
     }
 }
