@@ -1,5 +1,4 @@
 import java.util.*;
-import java.io.*;
 
 class Main {
     public String name;
@@ -29,22 +28,26 @@ class Main {
         try {
             state = "Everything is fine";
             throw new FalseAlarmException();
-        } catch (Exception ex) {
-            // false alarm!
+        } catch (FalseAlarmException ex) {
+            // The demonstration deliberately raised this exception.
         }
         System.out.println(state);
 
-        //Sustainable-9: Say we’re trying to get user input with a scanner. If a user types a string when the scanner is expecting an integer, an exception will be thrown and the program will end. Modify the code below so that the program asks for a number until it receives one. Note: Once an exception is thrown you will need to clear the scanner of input by calling scanner.nextLine();
+        //Sustainable-9: Say we’re trying to get user input with a scanner. If a user types a string when the scanner is expecting an integer, an exception will be thrown and the program will end. Modify the code below so that the program asks for a number until it receives one. Note: Read one line at a time and stop retrying at end of input.
 
-        Scanner scanner = new Scanner(System.in);
-        boolean done = false;
-        while (!done) {
-            try {
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
                 System.out.print("Enter a number: ");
-                int number = scanner.nextInt();
-                done = true;
-            } catch (Exception ex) {
-                scanner.nextLine();
+                if (!scanner.hasNextLine()) {
+                    System.out.println();
+                    break;
+                }
+                try {
+                    Integer.parseInt(scanner.nextLine().strip());
+                    break;
+                } catch (NumberFormatException invalid) {
+                    System.out.println("Please enter a whole number.");
+                }
             }
         }
 
@@ -172,11 +175,11 @@ class Main {
         if (namesToAges.containsKey("Kyle")) {
             System.out.println("Kyle is in the map!");
         } else {
-            namesToAges.put("Kyle", 19);
+            namesToAges.put("Kyle", 22);
         }
 
         // Map-6: Henry has a second friend named Joe, but he’s 21 years old. Add this second Joe to the map.
-        namesToAges.put("Joe", 25);
+        namesToAges.put("Joe", 21);
         //Map-6: Now that you’ve added the second Joe, print the map. What do you notice? Why is this the case?
         System.out.println(namesToAges);
 
@@ -206,8 +209,7 @@ class Main {
 
         @Override
         public String toString() {
-            return one.toString() + " " + two.toString() + " " +
-                three.toString();
+            return one + " " + two + " " + three;
         }
     }
 
@@ -226,14 +228,21 @@ class Main {
     }
 
     public static String applyBackspaces(String message) {
-        Stack<Character> stack = new Stack<>();
-        for (int i = 0; i < message.length(); i++) {
-            if (message.charAt(i) == '#' && !stack.isEmpty()) {
-                stack.pop();
+        Deque<Integer> typed = new ArrayDeque<>();
+        for (int offset = 0; offset < message.length();) {
+            int key = message.codePointAt(offset);
+            offset += Character.charCount(key);
+            if (key == '#') {
+                typed.pollLast();
             } else {
-                stack.push(message.charAt(i));
+                typed.addLast(key);
             }
         }
-        return stack.toString();
+
+        var result = new StringBuilder();
+        for (int key : typed) {
+            result.appendCodePoint(key);
+        }
+        return result.toString();
     }
 }
