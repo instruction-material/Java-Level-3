@@ -1,50 +1,64 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 class Main {
+    private static final int SIZE = 300;
+    private static final int VALUE_RANGE = 1000;
+    private static final int ROUNDS = 4;
 
-    private static final int LIST_RANGE = 1000;
-    private static final int LIST_SIZE = 10000;
-    private static final int NUM_TESTS = 1;
-
-    // 10000 1
-    // 100 10000
-
-    // NOTES:
-    // insertion sort is best on small lists (<1000)
-    // merge sort is best on large lists (>1000)
-    // "LIST_RANGE" is the range for picking random numbers
-    // increasing "NUM_TESTS" amplifies differences (but takes longer)
+    record Algorithm(String name, Sort implementation) {}
 
     public static void main(String[] args) {
+        List<Algorithm> algorithms = List.of(
+                new Algorithm("Selection sort", new SelectionSort()),
+                new Algorithm("Insertion sort", new InsertionSort()),
+                new Algorithm("Bubble sort", new BubbleSort()),
+                new Algorithm("Merge sort", new MergeSort()));
+        Random random = new Random(2026L);
+        ArrayList<Integer> warmup = ListGenerator.getRandom(SIZE, VALUE_RANGE, random);
+        for (Algorithm algorithm : algorithms) {
+            timed(algorithm, warmup, ascending(warmup));
+        }
 
-        System.out.println();
-        System.out.println(LIST_SIZE + " elements");
-        System.out.println(NUM_TESTS + " tests\n");
-
-        System.out.print("Selection Sort: ");
-        timeTest(new SelectionSort());
-        System.out.print("Insertion Sort: ");
-        timeTest(new InsertionSort());
-        System.out.print("   Bubble Sort: ");
-        timeTest(new BubbleSort());
-        System.out.print("    Merge Sort: ");
-        timeTest(new MergeSort());
+        System.out.printf(Locale.ROOT, "%d values per trial, %d trials per input order%n", SIZE, ROUNDS);
+        for (String order : List.of("random", "ascending", "descending")) {
+            long[] elapsed = new long[algorithms.size()];
+            for (int round = 0; round < ROUNDS; round++) {
+                ArrayList<Integer> input = ListGenerator.getRandom(SIZE, VALUE_RANGE, random);
+                if (order.equals("ascending")) input.sort(Comparator.naturalOrder());
+                if (order.equals("descending")) input.sort(Comparator.reverseOrder());
+                ArrayList<Integer> expected = ascending(input);
+                for (int offset = 0; offset < algorithms.size(); offset++) {
+                    // Each algorithm runs first once for every input order.
+                    int index = (offset + round) % algorithms.size();
+                    elapsed[index] += timed(algorithms.get(index), input, expected);
+                }
+            }
+            System.out.println(order);
+            for (int index = 0; index < algorithms.size(); index++) {
+                double meanMillis = elapsed[index] / (ROUNDS * 1_000_000.0);
+                System.out.printf(Locale.ROOT, "%s mean: %.3f ms%n", algorithms.get(index).name(), meanMillis);
+            }
+        }
     }
 
-    private static double timeTest(Sort algorithm) {
+    private static ArrayList<Integer> ascending(ArrayList<Integer> input) {
+        ArrayList<Integer> expected = new ArrayList<>(input);
+        expected.sort(Comparator.naturalOrder());
+        return expected;
+    }
 
-        // begin tests
-        ArrayList<Integer> list;
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < NUM_TESTS; i++) {
-            list = ListGenerator.getRandom(LIST_SIZE, LIST_RANGE);
-            algorithm.sort(list);
+    static long timed(Algorithm algorithm, ArrayList<Integer> input, ArrayList<Integer> expected) {
+        ArrayList<Integer> working = new ArrayList<>(input);
+        long start = System.nanoTime();
+        ArrayList<Integer> result = algorithm.implementation().sort(working);
+        long elapsed = System.nanoTime() - start;
+        if (!expected.equals(result)) {
+            throw new IllegalStateException(algorithm.name() + " did not preserve and sort the same values.");
         }
-        long end = System.currentTimeMillis();
-
-        // display results
-        double time = (end - start) / 1000.0;
-        System.out.println(time + " seconds!");
-        return time;
+        return elapsed;
     }
 }

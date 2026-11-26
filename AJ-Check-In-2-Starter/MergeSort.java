@@ -24,33 +24,31 @@ public class MergeSort {
 
         //base case
         if (nums.size() <= 1) {
-            return nums;
+            return new ArrayList<>(nums);
         }
-        int midpoint = nums.size() / 2;
-
-        //YOUR CODE HERE
-
-        return null;
+        // TODO: sort both smaller halves and merge the two returned lists.
+        throw new UnsupportedOperationException("Complete the recursive merge sort");
     }
 
     public static ArrayList<Integer> merge(ArrayList<Integer> a,
                                            ArrayList<Integer> b) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        while (a.size() != 0 && b.size() != 0) {
-            if (a.get(0) < b.get(0)) {
-                result.add(a.get(0));
-                a.remove(0);
+        // Move a cursor past each copied value and keep both input lists intact.
+        ArrayList<Integer> result = new ArrayList<>(a.size() + b.size());
+        int left = 0;
+        int right = 0;
+        while (left < a.size() && right < b.size()) {
+            Integer fromLeft = a.get(left);
+            Integer fromRight = b.get(right);
+            if (fromLeft <= fromRight) {
+                result.add(fromLeft);
+                left++;
             } else {
-                result.add(b.get(0));
-                b.remove(0);
+                result.add(fromRight);
+                right++;
             }
         }
-        if (a.size() == 0) {
-            result.addAll(b);
-        }
-        if (b.size() == 0) {
-            result.addAll(a);
-        }
+        result.addAll(a.subList(left, a.size()));
+        result.addAll(b.subList(right, b.size()));
         return result;
     }
 
