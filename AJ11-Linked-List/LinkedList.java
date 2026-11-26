@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class LinkedList<T> implements List<T> {
 
     private Node<T> head;
@@ -95,31 +97,19 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        Node<T> current = this.head.next;
-
-        while (index > 0) {
-            //throw an exception if you've reached the end of the list
-            if (current == null) {
-                throw new IndexOutOfBoundsException();
-            }
-            //decrement the index as you traverse the list
+        Objects.checkIndex(index, length);
+        Node<T> current = head.next;
+        for (int position = 0; position < index; position++) {
             current = current.next;
-            index--;
         }
-        //once you've traversed "index" number of Nodes
-        //return the data in that Node
         return current.data;
     }
 
     @Override
     public boolean clearAll() {
-        //base case
-        if (this.head.next == null) {
-            return true;
-        }
-        //recursive case
-        this.removeBack();
-        return this.clearAll();
+        head.next = null;
+        length = 0;
+        return true;
     }
 
     @Override
