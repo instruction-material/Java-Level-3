@@ -13,3 +13,4 @@ Write a command parser that can be tested without running the full application.
 - Add quoted-string parsing with escaped quotes.
 - Add line-numbered script execution from a text file.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)

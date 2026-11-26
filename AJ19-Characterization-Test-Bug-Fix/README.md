@@ -12,3 +12,4 @@ Start with a small buggy service, write tests that describe current behavior, an
 ## Stretch
 - Add one refactor after the behavior is protected by tests.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)

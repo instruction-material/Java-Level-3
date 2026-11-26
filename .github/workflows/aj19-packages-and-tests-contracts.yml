@@ -1,0 +1,20 @@
+name: AJ19 Packages and Tests contracts
+on:
+  push:
+    paths:
+      - "AJ19-*/**"
+      - "tools/verify-aj19-packages-and-tests.py"
+      - ".github/workflows/aj19-packages-and-tests-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify Java 21 packaged starter and reference roles
+        run: JAVA_HOME="$JAVA_HOME_21_X64" python3 tools/verify-aj19-packages-and-tests.py

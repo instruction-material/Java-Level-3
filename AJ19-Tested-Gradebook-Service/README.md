@@ -13,3 +13,4 @@ Build a package-organized gradebook service with a thin console runner and indep
 - Add category weights such as quizzes, homework, and exams.
 - Add a dropped-lowest-score option and explain how it changes the average.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)
