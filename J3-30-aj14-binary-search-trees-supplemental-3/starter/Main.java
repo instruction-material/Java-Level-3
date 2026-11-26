@@ -1,15 +1,45 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
+    static final class Node {
+        final int key;
+        Node left;
+        Node right;
+
+        Node(int key) {
+            this.key = key;
         }
-        return total;
+    }
+
+    static Node add(Node root, int key) {
+        if (root == null) return new Node(key);
+        if (key < root.key) root.left = add(root.left, key);
+        if (key > root.key) root.right = add(root.right, key);
+        return root;
+    }
+
+    static List<Integer> inorder(Node root) {
+        var keys = new ArrayList<Integer>();
+        collect(root, keys);
+        return keys;
+    }
+
+    private static void collect(Node root, List<Integer> keys) {
+        if (root == null) return;
+        collect(root.left, keys);
+        keys.add(root.key);
+        collect(root.right, keys);
+    }
+
+    static Node trim(Node root, int low, int high) {
+        // TODO: Return the in-range subtree using the surviving nodes.
+        throw new UnsupportedOperationException("Return the in-range subtree using the surviving nodes");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        var root = add(null, 12);
+        for (int key : new int[]{3, 20, 7, -4, 18, 23}) add(root, key);
+        System.out.println(inorder(trim(root, 14, 23)));
     }
 }

@@ -78,6 +78,9 @@ Canonical source repository: `Java-Level-3`
 | `AJ14-BST` |
 | `AJ14-BST-Starter` |
 | `AJ14-BST-Traversals` |
+| `AJ14-BST-Basic-Packs` |
+| `AJ14-BST-Traversal-Packs` |
+| `AJ14-BST-Removal-Packs` |
 | `AJ15-Hash-Map` |
 | `AJ15-Hash-Map-Starter` |
 | `AJ15-Open-Addressing-Reference` |
