@@ -1,36 +1,27 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-// Demonstrate a small score calculation with named sample data
 public class Main {
-    private static final List<Integer> SAMPLE_VALUES = List.of(2, 5, 8, 13);
-    private static final int EVEN_DIVISOR = 2;
-    private static final int ODD_MULTIPLIER = 2;
-
-    // Compute the total score from the even and odd value rules
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-
-        // Apply the scoring rule to each value
-        for (int value : values) {
-            // Score even values with the divisor rule
-            if (value % EVEN_DIVISOR == 0) {
-                total += value / EVEN_DIVISOR;
+    static List<int[]> snapshots(int[] input) {
+        int[] values = input.clone();
+        List<int[]> output = new ArrayList<>();
+        for (int end = values.length - 1; end > 0; end--) {
+            for (int i = 0; i < end; i++) {
+                if (values[i] > values[i + 1]) {
+                    int saved = values[i];
+                    values[i] = values[i + 1];
+                    values[i + 1] = saved;
+                }
             }
-            // Score odd values with the multiplier rule
-            else {
-                total += value * ODD_MULTIPLIER;
-            }
+            output.add(values.clone());
         }
-
-        return total;
+        return output;
     }
 
-    /**
-	 * @brief Print the sample score
-	 *
-	 * @param args Command-line arguments
-	 */
     public static void main(String[] args) {
-        System.out.println(computeScore(SAMPLE_VALUES));
+        for (int[] row : snapshots(new int[]{4, 2, 3, 1})) {
+            System.out.println(Arrays.toString(row));
+        }
     }
 }

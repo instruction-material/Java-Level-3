@@ -1,15 +1,12 @@
-import java.util.List;
+import java.util.Arrays;
 
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    static int[] smallest(int[] input, int k) {
+        // TODO: Select the sorted prefix and stop after k positions.
+        throw new UnsupportedOperationException("Select the sorted prefix and stop after k positions");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        System.out.println(Arrays.toString(smallest(new int[]{8, -3, 5, -3, 2}, 3)));
     }
 }

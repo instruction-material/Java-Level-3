@@ -1,36 +1,40 @@
-import java.util.List;
+import java.util.Arrays;
 
-// Demonstrate a small score calculation with named sample data
 public class Main {
-    private static final List<Integer> SAMPLE_VALUES = List.of(2, 5, 8, 13);
-    private static final int EVEN_DIVISOR = 2;
-    private static final int ODD_MULTIPLIER = 2;
-
-    // Compute the total score from the even and odd value rules
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-
-        // Apply the scoring rule to each value
-        for (int value : values) {
-            // Score even values with the divisor rule
-            if (value % EVEN_DIVISOR == 0) {
-                total += value / EVEN_DIVISOR;
+    static void sort(int[] values) {
+        int lower = 0;
+        int upper = values.length - 1;
+        while (lower < upper) {
+            boolean swapped = false;
+            for (int i = lower; i < upper; i++) {
+                if (values[i] > values[i + 1]) {
+                    exchange(values, i, i + 1);
+                    swapped = true;
+                }
             }
-            // Score odd values with the multiplier rule
-            else {
-                total += value * ODD_MULTIPLIER;
+            if (!swapped) break;
+            upper--;
+            swapped = false;
+            for (int i = upper; i > lower; i--) {
+                if (values[i - 1] > values[i]) {
+                    exchange(values, i - 1, i);
+                    swapped = true;
+                }
             }
+            if (!swapped) break;
+            lower++;
         }
-
-        return total;
     }
 
-    /**
-	 * @brief Print the sample score
-	 *
-	 * @param args Command-line arguments
-	 */
+    private static void exchange(int[] values, int first, int second) {
+        int saved = values[first];
+        values[first] = values[second];
+        values[second] = saved;
+    }
+
     public static void main(String[] args) {
-        System.out.println(computeScore(SAMPLE_VALUES));
+        int[] sample = {2, 3, 8, 4, -1, 2};
+        sort(sample);
+        System.out.println(Arrays.toString(sample));
     }
 }

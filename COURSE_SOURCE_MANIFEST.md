@@ -26,6 +26,8 @@ Canonical source repository: `Java-Level-3`
 | `AJ-Check-In-2` |
 | `AJ-Check-In-2-Additional-Practice-Project` |
 | `AJ-Check-In-2-Starter` |
+| `AJ-Check-In-2-Workbook-Packs` |
+| `AJ-Check-In-2-Benchmark-Packs` |
 | `AJ-Check-In-3` |
 | `AJ-Check-In-3-Additional-Practice-Project` |
 | `AJ-Check-In-3-Additional-Practice-Project-Starter` |
@@ -121,6 +123,8 @@ Canonical source repository: `Java-Level-3`
 | `AJ8-Alphabetical-Order` |
 | `AJ8-Alphabetical-Order-Starter` |
 | `AJ8-Bubble-Sort` |
+| `AJ8-Bubble-Sort-Packs` |
+| `AJ8-Alphabetical-Order-Packs` |
 | `AJ9-Merge` |
 | `AJ9-Merge-Sort` |
 | `AJ9-Split` |

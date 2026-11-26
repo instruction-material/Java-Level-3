@@ -1,0 +1,15 @@
+# Check-In 2 sorting workbook
+
+Work through four sorting traces, then complete the matching methods. Use selection on [34, 23, 76, 75, 14, 25] for two passes, insertion on [99, 15, 27, 13, 8, 1] for three passes, and bubble on [50, 23, 12, 43, 12, 20] for two passes. Merge [1, 4, 7, 10] and [2, 3, 5, 11] with the supplied cursor merge, then implement the recursive caller.
+
+Return a separate array in each case and leave the input alone. Pass counts are nonnegative. Requests beyond the useful pass count finish the sort. Explain the fixed prefix or tail after each pass. Full sorting examples must preserve each input value, including duplicates.
+
+This reference passes the supplied contract checks.
+
+```sh
+javac --release 21 -Xlint:all -Werror Main.java ContractTests.java
+java ContractTests
+java Main
+```
+
+For the equal-run extension, run `java ContractTests range` and `java Main range`. The result is [first, endExclusive] in the sorted copy; an absent value gives [-1, -1].
