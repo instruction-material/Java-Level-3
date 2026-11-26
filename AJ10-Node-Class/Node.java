@@ -15,6 +15,6 @@ public class Node<T> {
     }
     //toString()
     public String toString() {
-        return data.toString();
+        return String.valueOf(data);
     }
 }
