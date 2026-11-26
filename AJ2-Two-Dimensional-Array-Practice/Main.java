@@ -7,6 +7,10 @@ class Main {
         // 1. Ask the user for a size and create a square two-dimensional array of that size. Store the sum of the row and column indices in each slot.
         System.out.print("\nEnter the size of the array: ");
         final int SIZE = in.nextInt();
+        if (SIZE <= 0) {
+            System.out.println("Size must be positive.");
+            return;
+        }
         int[][] arr = new int[SIZE][SIZE];
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
@@ -41,14 +45,15 @@ class Main {
 
     // 2. Write a method that returns the maximum of a two-dimensionsensional array.
     public static int maxNum(int[][] arr) {
-        int maximum = arr[0][0];
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if (arr[i][j] > maximum) {
-                    maximum = arr[i][j];
-                }
+        int maximum = Integer.MIN_VALUE;
+        boolean found = false;
+        for (int[] row : arr) {
+            for (int value : row) {
+                found = true;
+                maximum = Math.max(maximum, value);
             }
         }
+        if (!found) throw new IllegalArgumentException("Matrix has no values");
         return maximum;
     }
 
@@ -65,9 +70,9 @@ class Main {
 
     // 4. Write a method which takes in a two-dimensional square array of numbers and an integer N. The method should return true if N is in the array and false otherwise.
     public static boolean productFinder(int[][] arr, int N) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if (arr[i][j] == N) {
+        for (int[] row : arr) {
+            for (int value : row) {
+                if (value == N) {
                     return true;
                 }
             }

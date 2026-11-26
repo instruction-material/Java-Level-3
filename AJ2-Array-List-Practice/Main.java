@@ -35,8 +35,8 @@ class Main {
     // 2. Write a method which takes in an ArrayList of numbers and returns true if two distinct numbers in the ArrayList sums to zero. The method should return false otherwise.
     public static boolean sumZero(ArrayList<Integer> arrList) {
         for (int i = 0; i < arrList.size(); i++) {
-            for (int j = 0; j < arrList.size(); j++) {
-                if (arrList.get(i) + arrList.get(j) == 0 && i != j) {
+            for (int j = i + 1; j < arrList.size(); j++) {
+                if ((long) arrList.get(i) + arrList.get(j) == 0) {
                     return true;
                 }
             }
@@ -47,6 +47,7 @@ class Main {
     // 3. Write a method which takes in an ArrayList of numbers and returns the ArrayList with the smallest number removed.
     public static ArrayList<Integer>
     removeSmallest(ArrayList<Integer> arrList) {
+        if (arrList.isEmpty()) return arrList;
         int indexOfSmallest = 0;
         for (int i = 0; i < arrList.size(); i++) {
             if (arrList.get(i) < arrList.get(indexOfSmallest)) {

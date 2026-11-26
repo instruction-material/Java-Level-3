@@ -9,12 +9,16 @@ class Main {
         int row = in.nextInt();
         System.out.print("Enter the number of columns: ");
         int col = in.nextInt();
+        if (row < 0 || col < 0) {
+            System.out.println("Dimensions must be nonnegative.");
+            return;
+        }
 
         //create the two two-dimensional arrays
         System.out.println("\nEntering data for matrix #1...");
-        int[][] mat1 = enterData(row, col);
+        int[][] mat1 = enterData(in, row, col);
         System.out.println("\nEntering data for matrix #2...");
-        int[][] mat2 = enterData(row, col);
+        int[][] mat2 = enterData(in, row, col);
 
         //add the two arrays together
         int[][] result = new int[row][col];
@@ -30,8 +34,7 @@ class Main {
     }
 
     //fills a two-dimentional array with the given number of rows and columns
-    public static int[][] enterData(int row, int col) {
-        Scanner in = new Scanner(System.in);
+    public static int[][] enterData(Scanner in, int row, int col) {
         int[][] result = new int[row][col];
 
         for (int i = 0; i < row; i++) {

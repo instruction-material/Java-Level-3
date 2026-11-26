@@ -15,6 +15,10 @@ class Main {
         int numTests = in.nextInt();
 
         //get all the test scores and save them in an array
+        if (numTests <= 0) {
+            System.out.println("Enter at least one test score.");
+            return;
+        }
         int[] scores = new int[numTests];
         for (int i = 0; i < numTests; i++) {
             System.out.print("Enter you score for test #" +
@@ -29,17 +33,18 @@ class Main {
     }
 
     public static double average(int[] scores) {
-        int sum = 0;
+        if (scores.length == 0) throw new IllegalArgumentException("No scores");
+        long sum = 0;
         for (int i = 0; i < scores.length; i++) {
             sum += scores[i];
         }
-        return sum / scores.length;
+        return (double) sum / scores.length;
     }
 
     public static String letterGrade(double average) {
 
         //optional rounding feature
-        double wholeNum = (double)(Math.floor(average));
+        double wholeNum = Math.floor(average);
         if (Math.abs(average - wholeNum) >= 0.5) {
             average = wholeNum + 1;
         }

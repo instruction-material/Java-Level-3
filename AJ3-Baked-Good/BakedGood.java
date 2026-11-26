@@ -1,7 +1,6 @@
 public abstract class BakedGood implements Comparable<BakedGood> {
     private String name;
-    private String[] ingredients;
-    private int numIngredients;
+    private final String[] ingredients;
     private String flavor;
     private int batchSize;
     private boolean forSale;
@@ -9,7 +8,7 @@ public abstract class BakedGood implements Comparable<BakedGood> {
     public BakedGood(String name, String[] ingredients, String flavor,
                      int batchSize, boolean forSale) {
         this.name = name;
-        this.ingredients = ingredients;
+        this.ingredients = ingredients.clone();
         this.flavor = flavor;
         this.batchSize = batchSize;
         this.forSale = forSale;
@@ -24,7 +23,7 @@ public abstract class BakedGood implements Comparable<BakedGood> {
     }
 
     public int getNumIngredients() {
-        return numIngredients;
+        return ingredients.length;
     }
 
     public void setBatchSize(int batchSize) {
@@ -32,12 +31,7 @@ public abstract class BakedGood implements Comparable<BakedGood> {
     }
 
     public int compareTo(BakedGood bg) {
-        if (numIngredients < bg.getNumIngredients()) {
-            return -1;
-        } else if (numIngredients > bg.getNumIngredients()) {
-            return 1;
-        }
-        return 0;
+        return Integer.compare(getNumIngredients(), bg.getNumIngredients());
     }
 
     public String toString() {
