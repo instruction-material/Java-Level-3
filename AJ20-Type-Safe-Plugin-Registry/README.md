@@ -12,3 +12,4 @@ Design a registry for named commands or tools without falling back to raw `Objec
 ## Stretch
 - Add command metadata such as description, required arguments, and examples.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)

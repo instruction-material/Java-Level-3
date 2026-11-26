@@ -12,3 +12,4 @@ Create a scheduler that can order tasks using different comparator strategies.
 ## Stretch
 - Allow users to switch ordering policy while tasks are already loaded.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)

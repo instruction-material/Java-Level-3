@@ -1,0 +1,6 @@
+oak,3,READY
+maple,-1,READY
+existing,9,READY
+cedar,0,WAITING
+oak,9,READY
+spare,1,UNKNOWN

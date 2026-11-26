@@ -12,3 +12,4 @@ Build a file-backed log analyzer with clear pipeline stages.
 ## Stretch
 - Add a report sorted by frequency and then by name.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)

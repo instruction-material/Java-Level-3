@@ -1,0 +1,5 @@
+09:30|CHECKOUT|oak
+malformed
+08:05|RETURN|maple
+10:20|CHECKOUT|oak
+71:00|CHECKOUT|cedar

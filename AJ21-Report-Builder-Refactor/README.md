@@ -12,3 +12,4 @@ Refactor a messy report generator into clear stages.
 ## Stretch
 - Add a second output format such as plain text and CSV.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)

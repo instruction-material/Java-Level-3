@@ -14,3 +14,5 @@ Build a reusable, type-safe in-memory repository using Java records as immutable
 
 ## Stretch
 - Add a sorted query method that accepts a `Comparator`.
+
+[Starter workbook](starter/) · [Reference implementation](solution/)

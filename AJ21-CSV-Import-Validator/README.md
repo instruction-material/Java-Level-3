@@ -12,3 +12,4 @@ Create a CSV-style importer that accepts good rows and reports bad rows without 
 ## Stretch
 - Add a dry-run mode that validates a file without importing it.
 
+[Starter workbook](starter/) · [Reference implementation](solution/)
