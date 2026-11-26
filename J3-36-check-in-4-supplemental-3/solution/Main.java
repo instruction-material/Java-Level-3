@@ -1,36 +1,34 @@
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-// Demonstrate a small score calculation with named sample data
 public class Main {
-    private static final List<Integer> SAMPLE_VALUES = List.of(2, 5, 8, 13);
-    private static final int EVEN_DIVISOR = 2;
-    private static final int ODD_MULTIPLIER = 2;
+    record Arc(String from, String to) {}
+    record Choice(long cost, List<String> route) {}
 
-    // Compute the total score from the even and odd value rules
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-
-        // Apply the scoring rule to each value
-        for (int value : values) {
-            // Score even values with the divisor rule
-            if (value % EVEN_DIVISOR == 0) {
-                total += value / EVEN_DIVISOR;
+    static Optional<Choice> best(Map<Arc, Long> weights, List<List<String>> candidates) {
+        Choice best = null;
+        for (List<String> path : candidates) {
+            if (path.isEmpty()) continue;
+            long cost = 0;
+            boolean valid = true;
+            for (int i = 1; i < path.size(); i++) {
+                Long edge = weights.get(new Arc(path.get(i - 1), path.get(i)));
+                if (edge == null || edge < 0 || edge > Long.MAX_VALUE - cost) {
+                    valid = false;
+                    break;
+                }
+                cost += edge;
             }
-            // Score odd values with the multiplier rule
-            else {
-                total += value * ODD_MULTIPLIER;
-            }
+            if (valid && (best == null || cost < best.cost())) best = new Choice(cost, List.copyOf(path));
         }
-
-        return total;
+        return Optional.ofNullable(best);
     }
 
-    /**
-	 * @brief Print the sample score
-	 *
-	 * @param args Command-line arguments
-	 */
     public static void main(String[] args) {
-        System.out.println(computeScore(SAMPLE_VALUES));
+        var weights = Map.of(new Arc("A", "B"), 2L, new Arc("B", "C"), 3L, new Arc("A", "C"), 8L);
+        var choice = best(weights, List.of(List.of("C", "A"), List.of("A", "C"), List.of("A", "B", "C"))).orElseThrow();
+        System.out.println(choice.cost());
+        System.out.println(choice.route());
     }
 }

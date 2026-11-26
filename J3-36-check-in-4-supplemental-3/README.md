@@ -1,14 +1,5 @@
-# Check-In #4 supplemental 3
+# Choose among candidate routes
 
-Course: Java Level 3
-Module: Check-In #4 supplemental 3
+Compare the total costs of a list of proposed routes through a directed graph. Skip unusable routes and keep the first candidate when costs tie.
 
-Use the starter folder first. The starter is intentionally incomplete, and the solution shows one clean way to finish the same build after the student has worked through it.
-
-Suggested flow:
-- Read the module brief and identify the core requirement.
-- Complete the TODO markers in the starter implementation.
-- Test at least one custom case beyond the default example.
-- Compare against the solution only after the student has a working draft.
-
-Quick run hint: `javac Main.java && java Main`
+[Starter](starter/) · [Reference implementation](solution/)
