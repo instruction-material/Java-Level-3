@@ -31,6 +31,8 @@ Canonical source repository: `Java-Level-3`
 | `AJ-Check-In-3` |
 | `AJ-Check-In-3-Additional-Practice-Project` |
 | `AJ-Check-In-3-Additional-Practice-Project-Starter` |
+| `AJ-Check-In-3-Collections-Practice-Packs` |
+| `AJ-Check-In-3-Workbook-Packs` |
 | `AJ-Check-In-3-Starter` |
 | `AJ-Check-In-4` |
 | `AJ-Check-In-4-Additional-Practice-Project` |

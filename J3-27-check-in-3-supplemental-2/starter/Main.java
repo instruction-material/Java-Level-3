@@ -1,15 +1,17 @@
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    record Dispatch(String id, int count) {}
+
+    static List<Dispatch> batch(List<String> arrivals) {
+        // TODO: Count IDs and dispatch in first arrival order.
+        throw new UnsupportedOperationException("Count IDs and dispatch in first arrival order");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        System.out.println(batch(List.of("A2", "B1", "A2", "C3", "B1", "A2")));
     }
 }
