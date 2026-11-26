@@ -1,0 +1,22 @@
+name: AJ10 sustainable programming contracts
+on:
+  push:
+    paths:
+      - "AJ10-*-Packs/**"
+      - "J3-21-*/**"
+      - "J3-22-*/**"
+      - "tools/verify-aj10-sustainable.py"
+      - ".github/workflows/aj10-sustainable-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify Java 21 roles, file data and console boundaries
+        run: JAVA_HOME="$JAVA_HOME_21_X64" python3 tools/verify-aj10-sustainable.py

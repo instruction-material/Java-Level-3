@@ -3,12 +3,14 @@ import java.util.*;
 public class Bakery {
     private String name;
     private String address;
+    private final Scanner input;
     private ArrayList<BakedGood> bakedGoods = new ArrayList<>();
     private ArrayList<Worker> workers = new ArrayList<>();
 
     public Bakery(String n, String a) {
         name = n;
         address = a;
+        input = new Scanner(System.in);
     }
 
     // NESTED BAKEDGOODS CLASS ----------------------------------------
@@ -117,7 +119,7 @@ public class Bakery {
 
     public void hireWorkers(int numWorkers) {
 
-        Scanner s = new Scanner(System.in);
+        Scanner s = input;
         System.out.println("We are currently hiring " + numWorkers +
                            " workers.");
         for (int i = 0; i < numWorkers; i++) {
@@ -155,7 +157,7 @@ public class Bakery {
     }
 
     public void addBakedGoods(int numBakedGoods) {
-        Scanner s = new Scanner(System.in);
+        Scanner s = input;
         System.out.println("We are currently baking " + numBakedGoods +
                            " items.");
 

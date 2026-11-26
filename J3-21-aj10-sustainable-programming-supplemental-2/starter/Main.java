@@ -1,15 +1,13 @@
-import java.util.List;
-
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    record Stock(String name, int amount) {}
+
+    static Stock parse(String line) {
+        // TODO: Convert and validate a single stock record.
+        throw new UnsupportedOperationException("Convert and validate a single stock record");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        Stock stock = parse(" flour | 12 ");
+        System.out.println(stock.name() + ": " + stock.amount());
     }
 }

@@ -38,10 +38,13 @@ Canonical source repository: `Java-Level-3`
 | `AJ1-Chat-Bot` |
 | `AJ1-Mad-Lib` |
 | `AJ10-Anything-Array` |
+| `AJ10-Anything-Array-Packs` |
 | `AJ10-Exception-Practice` |
+| `AJ10-Exceptions-Packs` |
 | `AJ10-Exception-Practice-Starter` |
 | `AJ10-Exceptions` |
 | `AJ10-Juni-Bakery` |
+| `AJ10-Bakery-Packs` |
 | `AJ10-Juni-Bakery-Starter` |
 | `AJ10-Nested-Classes` |
 | `AJ10-Node-Class` |
