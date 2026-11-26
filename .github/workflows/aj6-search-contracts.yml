@@ -1,0 +1,24 @@
+name: AJ6 binary search contracts
+on:
+  push:
+    paths:
+      - "AJ6-Binary-Search-Iteration-Packs/**"
+      - "AJ6-Binary-Search-Recursion-Packs/**"
+      - "AJ6-Precision-Square-Root-Packs/**"
+      - "J3-09-aj6-binary-search-supplemental-2/**"
+      - "J3-10-aj6-binary-search-supplemental-3/**"
+      - "tools/verify-aj6-search.py"
+      - ".github/workflows/aj6-search-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify Java 21 binary search, bisection and both practice roles
+        run: JAVA_HOME="$JAVA_HOME_21_X64" python3 tools/verify-aj6-search.py

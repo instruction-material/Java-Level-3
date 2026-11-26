@@ -107,6 +107,9 @@ Canonical source repository: `Java-Level-3`
 | `AJ6-Binary-Search-with-Iteration` |
 | `AJ6-Binary-Search-with-Recursion` |
 | `AJ6-Precision-Square-Root` |
+| `AJ6-Binary-Search-Iteration-Packs` |
+| `AJ6-Binary-Search-Recursion-Packs` |
+| `AJ6-Precision-Square-Root-Packs` |
 | `AJ7-Biggest-to-Smallest-Bookshelf` |
 | `AJ7-Insertion-Sort` |
 | `AJ7-Selection-Sort` |

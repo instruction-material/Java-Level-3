@@ -1,36 +1,19 @@
-import java.util.List;
-
-// Demonstrate a small score calculation with named sample data
 public class Main {
-    private static final List<Integer> SAMPLE_VALUES = List.of(2, 5, 8, 13);
-    private static final int EVEN_DIVISOR = 2;
-    private static final int ODD_MULTIPLIER = 2;
-
-    // Compute the total score from the even and odd value rules
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-
-        // Apply the scoring rule to each value
-        for (int value : values) {
-            // Score even values with the divisor rule
-            if (value % EVEN_DIVISOR == 0) {
-                total += value / EVEN_DIVISOR;
-            }
-            // Score odd values with the multiplier rule
-            else {
-                total += value * ODD_MULTIPLIER;
-            }
+    static int insertionIndex(int[] values, int target) {
+        int lower = 0;
+        int upper = values.length;
+        while (lower < upper) {
+            int middle = lower + (upper - lower) / 2;
+            if (values[middle] < target) lower = middle + 1;
+            else upper = middle;
         }
-
-        return total;
+        return lower;
     }
 
-    /**
-	 * @brief Print the sample score
-	 *
-	 * @param args Command-line arguments
-	 */
     public static void main(String[] args) {
-        System.out.println(computeScore(SAMPLE_VALUES));
+        int[] sample = {2, 4, 4, 4, 9};
+        System.out.println(insertionIndex(sample, 4));
+        System.out.println(insertionIndex(sample, 5));
+        System.out.println(insertionIndex(sample, 10));
     }
 }

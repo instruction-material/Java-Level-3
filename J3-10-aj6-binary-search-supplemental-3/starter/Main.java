@@ -1,15 +1,13 @@
-import java.util.List;
-
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    static int insertionIndex(int[] values, int target) {
+        // TODO: Find the leftmost valid insertion position.
+        throw new UnsupportedOperationException("Find the leftmost valid insertion position");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        int[] sample = {2, 4, 4, 4, 9};
+        System.out.println(insertionIndex(sample, 4));
+        System.out.println(insertionIndex(sample, 5));
+        System.out.println(insertionIndex(sample, 10));
     }
 }
