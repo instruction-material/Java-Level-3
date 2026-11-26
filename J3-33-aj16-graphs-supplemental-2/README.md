@@ -1,14 +1,5 @@
 # AJ16 Graphs supplemental 2
 
-Course: Java Level 3
-Module: AJ16 Graphs supplemental 2
+Trace a queue and visited set across cycles.
 
-Use the starter folder first. The starter is intentionally incomplete, and the solution shows one clean way to finish the same build after the student has worked through it.
-
-Suggested flow:
-- Read the module brief and identify the core requirement.
-- Complete the TODO markers in the starter implementation.
-- Test at least one custom case beyond the default example.
-- Compare against the solution only after the student has a working draft.
-
-Quick run hint: `javac Main.java && java Main`
+The [starter](starter/) and [reference](solution/) include runnable examples and Java 21 contract checks.

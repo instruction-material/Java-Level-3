@@ -1,15 +1,17 @@
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    static List<String> breadthFirst(Map<String, List<String>> graph, String start) {
+        // TODO: Visit reachable vertices in breadth-first order.
+        throw new UnsupportedOperationException("Visit reachable vertices in breadth-first order");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        var graph = Map.of("A", List.of("B", "C"), "B", List.of("D"), "C", List.of("A", "D"));
+        System.out.println(breadthFirst(graph, "A"));
     }
 }

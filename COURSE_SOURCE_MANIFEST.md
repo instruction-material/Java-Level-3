@@ -94,6 +94,9 @@ Canonical source repository: `Java-Level-3`
 | `AJ16-Eulerian-Mail-Circuit` |
 | `AJ16-Simple-Graph` |
 | `AJ16-Simple-Graph-Starter` |
+| `AJ16-Basic-Graph-Packs` |
+| `AJ16-Shortest-Path-Packs` |
+| `AJ16-Eulerian-Mail-Circuit-Packs` |
 | `AJ17-Google-Maps` |
 | `AJ17-Loading-Data` |
 | `AJ17-Loading-Data-Starter` |
