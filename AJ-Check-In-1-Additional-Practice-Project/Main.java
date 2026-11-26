@@ -1,82 +1,88 @@
-import java.util.*;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Random;
+import java.util.function.IntPredicate;
 
 class Main {
+    private static final int ARR_SIZE = 100_000;
+    private static final int ARR_RANGE = 1_000_000;
+    private static final int QUERY_COUNT = 2_000;
+    private static final int ROUNDS = 4;
+    private static final Random random = new Random(2026L);
 
-    private static final int ARR_SIZE = 100000;
-    private static final int ARR_RANGE = 1000000;
-    private static final int NUM_TESTS = 100000;
-    private static final Random random = new Random();
+    record Trial(long elapsedNanos, int matches) {}
 
     public static void main(String[] args) {
-
         int[] array = createArray(ARR_SIZE, ARR_RANGE);
-        System.out.println(NUM_TESTS + " tests");
-
-        // linear search
-        System.out.println("\nStarting Linear Search...");
-        long linearStart = System.currentTimeMillis();
-        for (int i = 0; i < NUM_TESTS; i++) {
-            linear(array, random.nextInt(ARR_RANGE));
-        }
-        long linearEnd = System.currentTimeMillis();
-        double linearTime = (linearEnd - linearStart) / 1000.0;
-        System.out.println("Completed in " + linearTime + " seconds!");
-
         Arrays.sort(array);
-
-        // binary search
-        System.out.println("\nStarting Binary Search...");
-        long binaryStart = System.currentTimeMillis();
-        for (int i = 0; i < NUM_TESTS; i++) {
-            binary(array, 0, array.length - 1, random.nextInt(ARR_RANGE));
+        int[] targets = new int[QUERY_COUNT];
+        for (int i = 0; i < targets.length; i += 2) {
+            targets[i] = array[random.nextInt(array.length)];
+            targets[i + 1] = -1;
         }
-        long binaryEnd = System.currentTimeMillis();
-        double binaryTime = (binaryEnd - binaryStart) / 1000.0;
-        System.out.println("Completed in " + binaryTime + " seconds!");
+        IntPredicate linearLookup = target -> linear(array, target);
+        IntPredicate binaryLookup = target -> binary(array, 0, array.length - 1, target) != -1;
+
+        // Warm both search methods using the same short set of queries.
+        int[] warmup = Arrays.copyOf(targets, 200);
+        measure(warmup, linearLookup);
+        measure(warmup, binaryLookup);
+
+        long linearNanos = 0;
+        long binaryNanos = 0;
+        for (int round = 0; round < ROUNDS; round++) {
+            boolean linearFirst = round % 2 == 0;
+            Trial first = measure(targets, linearFirst ? linearLookup : binaryLookup);
+            Trial second = measure(targets, linearFirst ? binaryLookup : linearLookup);
+            if (first.matches() != targets.length / 2 || second.matches() != first.matches()) {
+                throw new IllegalStateException("Search results did not match the known workload.");
+            }
+            linearNanos += (linearFirst ? first : second).elapsedNanos();
+            binaryNanos += (linearFirst ? second : first).elapsedNanos();
+        }
+
+        System.out.printf(Locale.ROOT, "%d queries per round, %d hits and %d misses, %d rounds%n",
+                targets.length, targets.length / 2, targets.length / 2, ROUNDS);
+        System.out.printf(Locale.ROOT, "Linear search mean: %.3f ms%n", meanMillis(linearNanos));
+        System.out.printf(Locale.ROOT, "Binary search mean: %.3f ms%n", meanMillis(binaryNanos));
+    }
+
+    static Trial measure(int[] targets, IntPredicate lookup) {
+        int matches = 0;
+        long start = System.nanoTime();
+        for (int target : targets) {
+            if (lookup.test(target)) matches++;
+        }
+        return new Trial(System.nanoTime() - start, matches);
+    }
+
+    private static double meanMillis(long totalNanos) {
+        return totalNanos / (ROUNDS * 1_000_000.0);
     }
 
     public static int[] createArray(int size, int range) {
-        System.out.println("\nCreating an array with:");
-        System.out.println(ARR_SIZE + " elements");
-        System.out.println(ARR_RANGE + " possible numbers");
-        int[] nums = new int[size];
-        for (int i = 0; i < size; i++) {
-            nums[i] = random.nextInt(range);
+        int[] values = new int[size];
+        for (int index = 0; index < values.length; index++) {
+            values[index] = random.nextInt(range);
         }
-        return nums;
+        return values;
     }
 
     public static boolean linear(int[] nums, int target) {
         for (int num : nums) {
-            if (num == target) {
-                return true;
-            }
+            if (num == target) return true;
         }
         return false;
     }
 
     public static int binary(int[] numbers, int lower, int upper, int target) {
+        if (upper < lower) return -1;
 
-        //base case
-        if (upper < lower) {
-            return -1;
+        int middle = lower + (upper - lower) / 2;
+        if (target == numbers[middle]) return middle;
+        if (target > numbers[middle]) {
+            return binary(numbers, middle + 1, upper, target);
         }
-
-        //recursive case
-        int middle = (int)((upper + lower) / 2);
-        if (target == numbers[middle]) {
-            //we found the number!
-            return middle;
-
-        } else if (target > numbers[middle]) {
-            //target is greater than the middle number
-            lower = middle + 1;
-            return binary(numbers, lower, upper, target);
-
-        } else {
-            //target is less than the middle number
-            upper = middle - 1;
-            return binary(numbers, lower, upper, target);
-        }
+        return binary(numbers, lower, middle - 1, target);
     }
 }

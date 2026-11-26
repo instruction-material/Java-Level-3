@@ -10,7 +10,7 @@ public class BinarySearch {
 
     Binary-1: What is Binary Search? When can we use it? What are the two ways we can implement it? Can you describe how it works?
 
-    Binary-2: The binarySearch() method takes in a list and sorts the numbers from largest to smallest, but it's incomplete. Fill in the missing code to create two working Binary Search methods, one that works iteratively and one that works recursively. Be sure to test the method after adding your code!
+    Binary-2: The two methods search an ascending int array and return a matching index, or -1 when the target is absent. Trace an iterative and a recursive search and test a first-position hit, an absent target, and an empty array.
     */
 
         int[] nums = new int[100];
@@ -30,28 +30,17 @@ public class BinarySearch {
         int lower = 0;
         int upper = numbers.length - 1;
 
-        while (lower <= upper) {
-            int middle = (int)((lower + upper) / 2);
+        if (lower > upper) return -1;
 
-            // YOUR CODE HERE
-        }
-        return -1;
+        // TODO: compare the midpoint and move a bound until the range is empty.
+        throw new UnsupportedOperationException("Complete the iterative search");
     }
 
     public static int binarySearchRecur(int[] numbers, int target, int lower,
                                         int upper) {
+        if (lower > upper) return -1;
 
-        //YOUR CODE HERE
-
-        int middle = (int)((upper + lower) / 2);
-
-        if (target == numbers[middle]) {
-            return middle;
-        } else if (target > numbers[middle]) {
-            //YOUR CODE HERE
-        } else {
-            //YOUR CODE HERE
-        }
-        return -1;
+        // TODO: compare the midpoint and return a call on a smaller range when needed.
+        throw new UnsupportedOperationException("Complete the recursive search");
     }
 }
