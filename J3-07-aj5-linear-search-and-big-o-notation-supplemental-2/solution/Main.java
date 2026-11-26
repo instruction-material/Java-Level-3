@@ -1,36 +1,20 @@
-import java.util.List;
+public final class Main {
+    private Main() {}
 
-// Demonstrate a small score calculation with named sample data
-public class Main {
-    private static final List<Integer> SAMPLE_VALUES = List.of(2, 5, 8, 13);
-    private static final int EVEN_DIVISOR = 2;
-    private static final int ODD_MULTIPLIER = 2;
-
-    // Compute the total score from the even and odd value rules
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-
-        // Apply the scoring rule to each value
-        for (int value : values) {
-            // Score even values with the divisor rule
-            if (value % EVEN_DIVISOR == 0) {
-                total += value / EVEN_DIVISOR;
-            }
-            // Score odd values with the multiplier rule
-            else {
-                total += value * ODD_MULTIPLIER;
-            }
+    public static int firstPrefix(String[] labels, String prefix) {
+        if (prefix == null || prefix.isEmpty()) {
+            throw new IllegalArgumentException("prefix must contain text");
         }
-
-        return total;
+        for (int i = 0; i < labels.length; i++) {
+            if (labels[i].startsWith(prefix)) return i;
+        }
+        return -1;
     }
 
-    /**
-	 * @brief Print the sample score
-	 *
-	 * @param args Command-line arguments
-	 */
     public static void main(String[] args) {
-        System.out.println(computeScore(SAMPLE_VALUES));
+        String[] labels = {"map-north", "pen", "map-south"};
+        System.out.println(firstPrefix(labels, "map"));
+        System.out.println(firstPrefix(labels, "pen"));
+        System.out.println(firstPrefix(labels, "MAP"));
     }
 }

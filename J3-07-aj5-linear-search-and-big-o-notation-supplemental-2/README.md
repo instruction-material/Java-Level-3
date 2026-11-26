@@ -1,14 +1,5 @@
-# AJ5 Linear Search and Big-O Notation supplemental 2
+# Search Runtime Transfer Practice
 
-Course: Java Level 3
-Module: AJ5 Linear Search and Big-O Notation supplemental 2
+Return the first zero-based position whose whole label starts with the supplied prefix, or -1 if none do. Use case-sensitive matching. Accept an empty label array. Require a non-null array of non-null strings and a nonempty prefix. A null or empty prefix throws IllegalArgumentException.
 
-Use the starter folder first. The starter is intentionally incomplete, and the solution shows one clean way to finish the same build after the student has worked through it.
-
-Suggested flow:
-- Read the module brief and identify the core requirement.
-- Complete the TODO markers in the starter implementation.
-- Test at least one custom case beyond the default example.
-- Compare against the solution only after the student has a working draft.
-
-Quick run hint: `javac Main.java && java Main`
+Open starter or solution as a separate project.

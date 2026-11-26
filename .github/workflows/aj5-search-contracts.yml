@@ -1,0 +1,24 @@
+name: AJ5 search and growth contracts
+on:
+  push:
+    paths:
+      - "AJ5-Linear-Search/**"
+      - "AJ5-Linear-Search-Packs/**"
+      - "AJ5-Big-O-Practice-Packs/**"
+      - "J3-07-aj5-linear-search-and-big-o-notation-supplemental-2/**"
+      - "J3-08-aj5-linear-search-and-big-o-notation-supplemental-3/**"
+      - "tools/verify-aj5-search.py"
+      - ".github/workflows/aj5-search-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify JDK 21 search, growth and both role packs
+        run: JAVA_HOME="$JAVA_HOME_21_X64" python3 tools/verify-aj5-search.py

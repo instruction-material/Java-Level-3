@@ -1,14 +1,5 @@
-# AJ5 Linear Search and Big-O Notation supplemental 3
+# Runtime Comparison Extension Practice
 
-Course: Java Level 3
-Module: AJ5 Linear Search and Big-O Notation supplemental 3
+Return the first matching index and the actual count of equality comparisons for any non-null int array. A miss returns index -1. Count one comparison per element examined. Empty input returns (-1, 0). Keep the input unchanged.
 
-Use the starter folder first. The starter is intentionally incomplete, and the solution shows one clean way to finish the same build after the student has worked through it.
-
-Suggested flow:
-- Read the module brief and identify the core requirement.
-- Complete the TODO markers in the starter implementation.
-- Test at least one custom case beyond the default example.
-- Compare against the solution only after the student has a working draft.
-
-Quick run hint: `javac Main.java && java Main`
+Open starter or solution as a separate project.

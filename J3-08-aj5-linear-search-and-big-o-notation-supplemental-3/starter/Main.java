@@ -1,15 +1,18 @@
-import java.util.List;
+public final class Main {
+    public record Result(int index, int comparisons) {}
 
-public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
-        }
-        return total;
+    private Main() {}
+
+    public static Result search(int[] values, int target) {
+        throw new UnsupportedOperationException("Implement search");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        for (int size : new int[]{8, 16, 32}) {
+            int[] values = new int[size];
+            for (int i = 0; i < size; i++) values[i] = i;
+            System.out.printf("%d %d %d %d%n", size, search(values, 0).comparisons(),
+                search(values, size - 1).comparisons(), search(values, -1).comparisons());
+        }
     }
 }

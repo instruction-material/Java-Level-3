@@ -1,15 +1,17 @@
-import java.util.List;
+public final class Main {
+    private Main() {}
 
-public class Main {
-    private static int computeScore(List<Integer> values) {
-        int total = 0;
-        for (int value : values) {
-            // TODO: update the scoring rule.
+    public static int firstPrefix(String[] labels, String prefix) {
+        if (prefix == null || prefix.isEmpty()) {
+            throw new IllegalArgumentException("prefix must contain text");
         }
-        return total;
+        throw new UnsupportedOperationException("Implement firstPrefix");
     }
 
     public static void main(String[] args) {
-        System.out.println(computeScore(List.of(2, 5, 8, 13)));
+        String[] labels = {"map-north", "pen", "map-south"};
+        System.out.println(firstPrefix(labels, "map"));
+        System.out.println(firstPrefix(labels, "pen"));
+        System.out.println(firstPrefix(labels, "MAP"));
     }
 }

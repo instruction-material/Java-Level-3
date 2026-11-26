@@ -14,7 +14,7 @@ class Main {
         int target = scanner.nextInt();
 
         int index = linearSearch(arr, target);
-        if (index > 0) {
+        if (index >= 0) {
             System.out.println(target + " found at index " + index);
         } else {
             System.out.println(target + " is not in the array!");
