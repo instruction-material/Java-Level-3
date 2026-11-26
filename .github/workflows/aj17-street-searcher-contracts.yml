@@ -1,0 +1,22 @@
+name: AJ17 Street Searcher contracts
+on:
+  push:
+    paths:
+      - "AJ17-Street-Searcher-Packs/**"
+      - "J3-37-*/**"
+      - "J3-38-*/**"
+      - "tools/verify-aj17-street-searcher.py"
+      - ".github/workflows/aj17-street-searcher-contracts.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify Java 21 capstone stages and practice roles
+        run: JAVA_HOME="$JAVA_HOME_21_X64" python3 tools/verify-aj17-street-searcher.py

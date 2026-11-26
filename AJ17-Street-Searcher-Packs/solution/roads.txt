@@ -1,0 +1,8 @@
+# Fictional places and roads created for this course.
+# fromLat,fromLon toLat,toLon miles from--to
+10,10 10,11 2.5 Harbor--Market
+10,11 10,12 2.5 Market--Station
+10,10 10,12 8 Harbor--Station
+10,11 10,10 0 Market--Harbor
+10,11 11,11 1 Market--Library
+12,12 12,13 1 Hill--Grove
